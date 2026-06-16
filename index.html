@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FASIH SE 2026 — Padi / Jagung</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --green: #3B6D11;
+    --green-light: #EAF3DE;
+    --green-mid: #639922;
+    --green-dark: #27500A;
+    --amber: #BA7517;
+    --amber-light: #FAEEDA;
+    --gray: #5F5E5A;
+    --gray-light: #F1EFE8;
+    --gray-mid: #D3D1C7;
+    --text: #2C2C2A;
+    --text-muted: #5F5E5A;
+    --text-hint: #888780;
+    --border: #D3D1C7;
+    --bg: #F8F6F1;
+    --surface: #FFFFFF;
+    --radius: 10px;
+    --radius-sm: 6px;
+    --rice: #2C6E49;
+    --corn: #D4A017;
+  }
+
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 15px;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  .top-bar {
+    background: var(--green-dark);
+    color: #C0DD97;
+    padding: 10px 0;
+    text-align: center;
+    font-size: 12px;
+    letter-spacing: .06em;
+    font-weight: 500;
+  }
+
+  .page-header {
+    background: var(--green);
+    color: #EAF3DE;
+    padding: 28px 24px 24px;
+  }
+
+  .page-header .eyebrow {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .1em;
+    color: #C0DD97;
+    margin-bottom: 6px;
+  }
+
+  .page-header h1 {
+    font-size: 22px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 4px;
+  }
+
+  .page-header p {
+    font-size: 13px;
+    color: #9FE1CB;
+  }
+
+  .container {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 24px 16px 40px;
+  }
+
+  .section { margin-bottom: 24px; }
+
+  .section-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .08em;
+    color: var(--green);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--green-light);
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+    margin-bottom: 10px;
+  }
+
+  .field { margin-bottom: 14px; }
+  .field:last-child { margin-bottom: 0; }
+
+  .field-label {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-bottom: 7px;
+    line-height: 1.5;
+  }
+
+  .field-label strong {
+    color: var(--text);
+    font-weight: 600;
+    display: block;
+    margin-bottom: 2px;
+  }
+
+  .value-display {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--green-dark);
+    padding: 10px 14px;
+    background: var(--green-light);
+    border-radius: var(--radius-sm);
+    border-left: 4px solid var(--green);
+  }
+
+  /* Pilihan Komoditas */
+  .komoditas-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .komoditas-btn {
+    padding: 14px 10px;
+    border: 2px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--surface);
+    cursor: pointer;
+    text-align: center;
+    transition: all .2s;
+    font-family: inherit;
+  }
+
+  .komoditas-btn .icon {
+    font-size: 28px;
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  .komoditas-btn .nama {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .komoditas-btn .sub {
+    font-size: 12px;
+    color: var(--text-hint);
+  }
+
+  .komoditas-btn:hover { border-color: var(--green-mid); background: var(--green-light); }
+
+  .komoditas-btn.selected-padi {
+    border-color: var(--rice);
+    background: #E8F3ED;
+    box-shadow: 0 2px 8px rgba(44, 110, 73, 0.2);
+  }
+
+  .komoditas-btn.selected-padi .nama { color: var(--rice); }
+
+  .komoditas-btn.selected-jagung {
+    border-color: var(--corn);
+    background: #FFF8E7;
+    box-shadow: 0 2px 8px rgba(212, 160, 23, 0.2);
+  }
+
+  .komoditas-btn.selected-jagung .nama { color: var(--corn); }
+
+  .luas-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 7px;
+  }
+
+  .luas-btn {
+    padding: 10px 6px;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--surface);
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    text-align: center;
+    transition: all .15s;
+    font-family: inherit;
+  }
+
+  .luas-btn small {
+    display: block;
+    font-size: 11px;
+    font-weight: 400;
+    color: var(--text-hint);
+    margin-top: 2px;
+  }
+
+  .luas-btn:hover { background: var(--green-light); border-color: var(--green-mid); }
+
+  .luas-btn.selected {
+    background: var(--green-light);
+    border-color: var(--green);
+    color: var(--green-dark);
+  }
+
+  .luas-btn.selected small { color: var(--green); }
+
+  .custom-luas {
+    display: none;
+    margin-top: 10px;
+  }
+
+  .input-wrap {
+    position: relative;
+  }
+
+  .input-wrap input {
+    width: 100%;
+    padding: 9px 50px 9px 12px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-size: 14px;
+    color: var(--text);
+    background: var(--surface);
+    outline: none;
+    transition: border-color .15s;
+    font-family: inherit;
+  }
+
+  .input-wrap input:focus { border-color: var(--green); }
+
+  .input-wrap .unit {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 12px;
+    color: var(--text-hint);
+    pointer-events: none;
+    font-weight: 500;
+  }
+
+  .pengeluaran-rows { display: flex; flex-direction: column; gap: 10px; }
+
+  .pen-row {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--gray-light);
+  }
+
+  .pen-row:last-child { border-bottom: none; }
+
+  .pen-row .pen-label { font-size: 13px; color: var(--text-muted); }
+  .pen-row .pen-label strong { display: block; font-size: 14px; color: var(--text); font-weight: 600; }
+
+  .pen-row .pen-value {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--green-dark);
+    min-width: 130px;
+    text-align: right;
+  }
+
+  .total-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 18px;
+    background: var(--green-light);
+    border: 1.5px solid var(--green-mid);
+    border-radius: var(--radius);
+    margin-top: 4px;
+  }
+
+  .total-bar .total-lbl { font-size: 13px; font-weight: 600; color: var(--green-dark); }
+  .total-bar .total-val { font-size: 18px; font-weight: 700; color: var(--green); }
+
+  .divider { height: 1px; background: var(--border); margin: 14px 0; }
+
+  .highlight-box {
+    background: #FFF8E7;
+    border: 1.5px solid var(--amber);
+    border-radius: var(--radius);
+    padding: 14px 18px;
+    margin-top: 16px;
+  }
+
+  .highlight-box .title {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--amber);
+    text-transform: uppercase;
+    letter-spacing: .05em;
+  }
+
+  .highlight-box .amount {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--green-dark);
+    margin-top: 2px;
+  }
+
+  .highlight-box .note {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 2px;
+  }
+
+  .status-badge {
+    display: inline-block;
+    padding: 3px 12px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  .status-badge.surplus { background: #D4EDDA; color: #155724; }
+  .status-badge.defisit { background: #F8D7DA; color: #721C24; }
+  .status-badge.neutral { background: #E2E3E5; color: #383D41; }
+
+  .btn-group { display: flex; gap: 10px; margin-top: 8px; }
+
+  .btn-print {
+    flex: 1;
+    padding: 13px;
+    border-radius: var(--radius);
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: all .15s;
+    font-family: inherit;
+    background: var(--surface);
+    color: var(--text);
+    border: 1.5px solid var(--border);
+  }
+
+  .btn-print:hover { background: var(--gray-light); }
+
+  .btn-reset {
+    flex: 1;
+    padding: 13px;
+    border-radius: var(--radius);
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: all .15s;
+    font-family: inherit;
+    background: var(--amber);
+    color: #fff;
+    border: 1.5px solid var(--amber);
+  }
+
+  .btn-reset:hover { background: #9E6514; }
+
+  .toast {
+    display: none;
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--green-dark);
+    color: #C0DD97;
+    padding: 11px 24px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    z-index: 999;
+    white-space: nowrap;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  }
+
+  .komoditas-badge {
+    display: inline-block;
+    padding: 4px 16px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 700;
+    margin-top: 6px;
+  }
+
+  .komoditas-badge.padi { background: #E8F3ED; color: var(--rice); }
+  .komoditas-badge.jagung { background: #FFF8E7; color: var(--corn); }
+
+  @media (max-width: 480px) {
+    .komoditas-grid { grid-template-columns: 1fr 1fr; }
+    .luas-grid { grid-template-columns: repeat(2, 1fr); }
+    .pen-row { grid-template-columns: 1fr; }
+    .pen-row .pen-value { text-align: left; min-width: auto; }
+    .btn-group { flex-direction: column; }
+  }
+
+  @media print {
+    .top-bar, .btn-group, .toast { display: none !important; }
+    body { background: #fff; }
+    .card { border: 1px solid #ccc; box-shadow: none; }
+    .page-header { background: #3B6D11; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .luas-btn, .komoditas-btn { cursor: default; }
+  }
+</style>
+</head>
+<body>
+
+<div class="top-bar">BADAN PUSAT STATISTIK — FASIH SE 2026</div>
+
+<div class="page-header">
+  <div class="eyebrow">Simulasi Survei Ekonomi</div>
+  <h1>FASIH SE 2026</h1>
+  <p>Kec. Kasiman &nbsp;·&nbsp; Desa Tambakmerak &nbsp;·&nbsp; Kab. Bojonegoro</p>
+</div>
+
+<div class="container">
+
+  <!-- Pilihan Komoditas -->
+  <div class="section">
+    <div class="section-label">Pilih komoditas usaha</div>
+    <div class="card">
+      <div class="field">
+        <div class="field-label"><strong>Jenis tanaman</strong></div>
+        <div class="komoditas-grid" id="komoditasGrid">
+          <button class="komoditas-btn selected-padi" data-komoditas="padi" onclick="pilihKomoditas(this)">
+            <span class="icon">🌾</span>
+            <span class="nama">Padi</span>
+            <span class="sub">Sawah / Gogo</span>
+          </button>
+          <button class="komoditas-btn" data-komoditas="jagung" onclick="pilihKomoditas(this)">
+            <span class="icon">🌽</span>
+            <span class="nama">Jagung</span>
+            <span class="sub">Lahan kering</span>
+          </button>
+        </div>
+        <div style="margin-top:10px;">
+          <span class="komoditas-badge padi" id="komoditasBadge">🌾 Padi</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Luas Lahan -->
+  <div class="section">
+    <div class="section-label">Pilih luas lahan garapan</div>
+    <div class="card">
+      <div class="field">
+        <div class="field-label"><strong>Luas lahan</strong></div>
+        <div class="luas-grid" id="luasGrid">
+          <button class="luas-btn" data-val="1000" onclick="pilihLuas(this)">1.000 m²<small>10 are</small></button>
+          <button class="luas-btn selected" data-val="2500" onclick="pilihLuas(this)">2.500 m²<small>25 are</small></button>
+          <button class="luas-btn" data-val="5000" onclick="pilihLuas(this)">5.000 m²<small>50 are</small></button>
+          <button class="luas-btn" data-val="7500" onclick="pilihLuas(this)">7.500 m²<small>75 are</small></button>
+          <button class="luas-btn" data-val="10000" onclick="pilihLuas(this)">10.000 m²<small>1 hektar</small></button>
+          <button class="luas-btn" data-val="custom" onclick="pilihLuas(this)">Lainnya<small>isi manual</small></button>
+        </div>
+        <div class="custom-luas" id="customLuasWrap">
+          <div class="input-wrap" style="margin-top:10px">
+            <input type="number" id="customLuas" placeholder="Masukkan luas lahan..." min="100" step="100" oninput="pilihCustom()">
+            <span class="unit">m²</span>
+          </div>
+        </div>
+        <div style="margin-top:10px;font-size:13px;color:var(--text-muted);">
+          <span style="font-weight:600;color:var(--green-dark);">Terpilih: <span id="luasTerpilihText">2.500 m²</span></span> 
+          (<span id="luasAreText">25</span> are)
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pertanyaan 26 -->
+  <div class="section">
+    <div class="section-label">Pertanyaan 26 — rincian pengeluaran usaha tahun 2025</div>
+
+    <div class="card">
+      <div class="pengeluaran-rows">
+
+        <div class="pen-row">
+          <div class="pen-label">
+            <strong>26.a. Total upah dan gaji</strong>
+            Serta jaminan sosial pegawai
+          </div>
+          <div class="pen-value" id="p26aDisplay">Rp 0</div>
+        </div>
+
+        <div class="pen-row">
+          <div class="pen-label">
+            <strong>26.b. Biaya produksi</strong>
+            <span id="biayaProduksiLabel">Benih, pupuk, pestisida, sewa alat, dll.</span>
+          </div>
+          <div class="pen-value" id="p26bDisplay">Rp 6.500.000</div>
+        </div>
+
+        <div class="pen-row">
+          <div class="pen-label">
+            <strong>26.d. Biaya operasional</strong>
+            Air, listrik, gas, internet, pulsa, pemeliharaan, angkutan, dll.
+          </div>
+          <div class="pen-value" id="p26dDisplay">Rp 3.500.000</div>
+        </div>
+
+        <div class="pen-row">
+          <div class="pen-label">
+            <strong>26.e. Biaya non-operasional</strong>
+          </div>
+          <div class="pen-value" id="p26eDisplay">Rp 250.000</div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="total-bar">
+      <span class="total-lbl">26.f. Total pengeluaran (a+b+c+d+e)</span>
+      <span class="total-val" id="p26fDisplay">Rp 10.250.300</span>
+    </div>
+  </div>
+
+  <!-- Pertanyaan 27 -->
+  <div class="section">
+    <div class="section-label">Pertanyaan 27 — nilai produksi/pendapatan/penjualan tahun 2025</div>
+
+    <div class="card">
+      <div class="pen-row">
+        <div class="pen-label">
+          <strong>27.a. Nilai produksi/pendapatan/penjualan barang dan jasa</strong>
+          <span id="produksiLabel">(Gabah kering panen)</span>
+        </div>
+        <div class="pen-value" id="p27aDisplay">Rp 9.000.000</div>
+      </div>
+      <div class="divider"></div>
+      <div class="pen-row">
+        <div class="pen-label">
+          <strong>27.b. Pendapatan lainnya yang dihasilkan perusahaan</strong>
+        </div>
+        <div class="pen-value" id="p27bDisplay">Rp 0</div>
+      </div>
+      <div class="divider"></div>
+      <div class="pen-row" style="border-bottom:none;padding-bottom:0;">
+        <div class="pen-label">
+          <strong style="color:var(--green-dark);">27.c. Total nilai produksi/pendapatan/penjualan (a+b)</strong>
+        </div>
+        <div class="pen-value" style="font-size:18px;color:var(--green);" id="p27cDisplay">Rp 9.000.000</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RINGKASAN -->
+  <div class="section">
+    <div class="section-label">Ringkasan keuangan</div>
+
+    <div class="highlight-box" id="boxPendapatanUsaha">
+      <div class="title">&#128200; Total Pendapatan Usaha (Q27)</div>
+      <div class="amount" id="ringkasanPendapatanUsaha">Rp 9.000.000</div>
+      <div class="note" id="ringkasanPendapatanNote">Nilai produksi/penjualan tahun 2025</div>
+    </div>
+
+    <div class="highlight-box" style="border-color:var(--green);background:var(--green-light);" id="boxPengeluaranUsaha">
+      <div class="title" style="color:var(--green);">&#128200; Total Pengeluaran Usaha (Q26)</div>
+      <div class="amount" id="ringkasanPengeluaranUsaha">Rp 10.250.300</div>
+      <div class="note">Biaya produksi + operasional + non-operasional</div>
+    </div>
+
+    <div class="highlight-box" style="border-color:#BA7517;background:#FFF8E7;" id="boxSelisihUsaha">
+      <div class="title" style="color:#BA7517;">&#128184; Selisih Usaha (Pendapatan - Pengeluaran)</div>
+      <div class="amount" style="color:#721C24;" id="ringkasanSelisihUsaha">Rp -1.250.300</div>
+      <div class="note" id="ringkasanStatusUsaha">
+        <span class="status-badge defisit">&#9888; Defisit</span>
+        &nbsp; Pengeluaran lebih besar dari pendapatan usaha
+      </div>
+    </div>
+
+    <div class="highlight-box" style="border-color:#BA7517;background:#FFF8E7;border-width:2px;" id="boxKesimpulan">
+      <div class="title" style="color:#BA7517;">&#128200; KESIMPULAN</div>
+      <div class="amount" style="color:#721C24;font-size:24px;" id="ringkasanKesimpulan">Defisit Rp 1.250.300 / tahun</div>
+      <div class="note" style="font-size:13px;" id="ringkasanKesimpulanNote">
+        Pendapatan Rp9.000.000 - Pengeluaran Rp10.250.300 = <strong style="color:#721C24;">-Rp1.250.300</strong>
+        <br><span class="status-badge defisit" style="margin-top:5px;">&#9888; Usaha merugi, perlu efisiensi</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tombol Aksi -->
+  <div class="btn-group">
+    <button class="btn-reset" onclick="resetData()">&#8634; Reset Ke Default</button>
+    <button class="btn-print" onclick="window.print()">&#128438; Cetak / PDF</button>
+  </div>
+
+  <div style="text-align:center;font-size:11px;color:#888780;margin-top:20px;border-top:1px solid var(--border);padding-top:16px;">
+    FASIH SE 2026 — BPS Bojonegoro &bull; Pilih komoditas & luas lahan untuk melihat perubahan data
+  </div>
+
+</div>
+
+<div class="toast" id="toast">&#10003;&nbsp; Data diperbarui!</div>
+
+<script>
+let komoditasSaatIni = 'padi';
+let luasSaatIni = 2500;
+
+function fmt(n) {
+  return 'Rp ' + Math.round(n).toLocaleString('id-ID');
+}
+
+// DATA KOMODITAS (per 2500 m²)
+const DATA_KOMODITAS = {
+  padi: {
+    nama: 'Padi',
+    icon: '🌾',
+    produksi: 9000000,      // Gabah kering ~3.6 ton @ Rp2.500/kg
+    biayaProduksi: 6500000, // Benih, pupuk, pestisida, sewa traktor, panen
+    biayaOperasional: 3500000, // Air, listrik, pengairan, transport
+    biayaNonOperasional: 250000,
+    labelProduksi: '(Gabah kering panen)',
+    labelBiaya: 'Benih, pupuk, pestisida, sewa alat, panen, dll.'
+  },
+  jagung: {
+    nama: 'Jagung',
+    icon: '🌽',
+    produksi: 6500000,      // Jagung pipil ~2.6 ton @ Rp2.500/kg
+    biayaProduksi: 5000000, // Benih, pupuk, pestisida, sewa alat
+    biayaOperasional: 3000000, // Air, listrik, transport
+    biayaNonOperasional: 250000,
+    labelProduksi: '(Jagung pipil kering)',
+    labelBiaya: 'Benih, pupuk, pestisida, sewa alat, dll.'
+  }
+};
+
+function getDataByLuasDanKomoditas(luas, komoditas) {
+  const l = parseFloat(luas);
+  if (isNaN(l) || l < 100) return null;
+
+  const faktor = l / 2500;
+  const base = DATA_KOMODITAS[komoditas];
+  if (!base) return null;
+
+  // Biaya non-operasional tetap, yang lain proporsional
+  const produksi = Math.round(base.produksi * Math.min(faktor, 5));
+  const biayaProduksi = Math.round(base.biayaProduksi * Math.min(faktor, 5));
+  const biayaOperasional = Math.round(base.biayaOperasional * Math.min(faktor, 5));
+  const biayaNonOperasional = base.biayaNonOperasional;
+
+  return {
+    produksi,
+    biayaProduksi,
+    biayaOperasional,
+    biayaNonOperasional,
+    labelProduksi: base.labelProduksi,
+    labelBiaya: base.labelBiaya,
+    nama: base.nama,
+    icon: base.icon
+  };
+}
+
+function pilihKomoditas(el) {
+  document.querySelectorAll('.komoditas-btn').forEach(b => {
+    b.classList.remove('selected-padi', 'selected-jagung');
+  });
+  
+  const komoditas = el.dataset.komoditas;
+  komoditasSaatIni = komoditas;
+  
+  if (komoditas === 'padi') {
+    el.classList.add('selected-padi');
+    document.getElementById('komoditasBadge').className = 'komoditas-badge padi';
+    document.getElementById('komoditasBadge').textContent = '🌾 Padi';
+  } else {
+    el.classList.add('selected-jagung');
+    document.getElementById('komoditasBadge').className = 'komoditas-badge jagung';
+    document.getElementById('komoditasBadge').textContent = '🌽 Jagung';
+  }
+  
+  updateData(luasSaatIni);
+}
+
+function pilihLuas(el) {
+  document.querySelectorAll('.luas-btn').forEach(b => b.classList.remove('selected'));
+  el.classList.add('selected');
+  
+  const val = el.dataset.val;
+  const customWrap = document.getElementById('customLuasWrap');
+  
+  if (val === 'custom') {
+    customWrap.style.display = 'block';
+    const customVal = document.getElementById('customLuas').value;
+    if (customVal) {
+      luasSaatIni = parseFloat(customVal);
+      updateData(luasSaatIni);
+    }
+  } else {
+    customWrap.style.display = 'none';
+    luasSaatIni = parseFloat(val);
+    updateData(luasSaatIni);
+  }
+}
+
+function pilihCustom() {
+  const val = document.getElementById('customLuas').value;
+  if (val) {
+    luasSaatIni = parseFloat(val);
+    updateData(luasSaatIni);
+  }
+}
+
+function updateData(luas) {
+  const data = getDataByLuasDanKomoditas(luas, komoditasSaatIni);
+  if (!data) return;
+
+  const l = parseFloat(luas);
+  document.getElementById('luasTerpilihText').textContent = l.toLocaleString('id-ID') + ' m²';
+  document.getElementById('luasAreText').textContent = (l / 100).toFixed(1);
+
+  // Update label spesifik komoditas
+  document.getElementById('biayaProduksiLabel').textContent = data.labelBiaya;
+  document.getElementById('produksiLabel').textContent = data.labelProduksi;
+
+  // Update Q26
+  const totalBiaya = data.biayaProduksi + data.biayaOperasional + data.biayaNonOperasional;
+  document.getElementById('p26aDisplay').textContent = fmt(0);
+  document.getElementById('p26bDisplay').textContent = fmt(data.biayaProduksi);
+  document.getElementById('p26dDisplay').textContent = fmt(data.biayaOperasional);
+  document.getElementById('p26eDisplay').textContent = fmt(data.biayaNonOperasional);
+  document.getElementById('p26fDisplay').textContent = fmt(totalBiaya);
+
+  // Update Q27
+  document.getElementById('p27aDisplay').textContent = fmt(data.produksi);
+  document.getElementById('p27bDisplay').textContent = fmt(0);
+  document.getElementById('p27cDisplay').textContent = fmt(data.produksi);
+
+  // Update ringkasan
+  const selisihUsaha = data.produksi - totalBiaya;
+
+  document.getElementById('ringkasanPendapatanUsaha').textContent = fmt(data.produksi);
+  document.getElementById('ringkasanPendapatanNote').textContent = 
+    'Nilai produksi ' + data.nama.toLowerCase() + ' tahun 2025';
+  
+  document.getElementById('ringkasanPengeluaranUsaha').textContent = fmt(totalBiaya);
+  document.getElementById('ringkasanSelisihUsaha').textContent = fmt(selisihUsaha);
+  
+  const statusUsaha = document.getElementById('ringkasanStatusUsaha');
+  if (selisihUsaha > 0) {
+    statusUsaha.innerHTML = '<span class="status-badge surplus">&#128077; Surplus</span> &nbsp; Pendapatan lebih besar dari pengeluaran usaha';
+  } else if (selisihUsaha < 0) {
+    statusUsaha.innerHTML = '<span class="status-badge defisit">&#9888; Defisit</span> &nbsp; Pengeluaran lebih besar dari pendapatan usaha';
+  } else {
+    statusUsaha.innerHTML = '<span class="status-badge neutral">&#8226; Impas</span> &nbsp; Pendapatan sama dengan pengeluaran';
+  }
+
+  const kesimpulan = document.getElementById('ringkasanKesimpulan');
+  const kesimpulanNote = document.getElementById('ringkasanKesimpulanNote');
+  
+  if (selisihUsaha > 0) {
+    kesimpulan.textContent = 'Surplus ' + fmt(selisihUsaha) + ' / tahun';
+    kesimpulan.style.color = '#155724';
+    kesimpulanNote.innerHTML = 
+      'Pendapatan ' + fmt(data.produksi) + ' - Pengeluaran ' + fmt(totalBiaya) + 
+      ' = <strong style="color:#155724;">+' + fmt(selisihUsaha) + '</strong>' +
+      '<br><span class="status-badge surplus" style="margin-top:5px;">&#128077; Usaha ' + data.nama.toLowerCase() + ' sehat</span>';
+  } else if (selisihUsaha < 0) {
+    kesimpulan.textContent = 'Defisit ' + fmt(selisihUsaha) + ' / tahun';
+    kesimpulan.style.color = '#721C24';
+    kesimpulanNote.innerHTML = 
+      'Pendapatan ' + fmt(data.produksi) + ' - Pengeluaran ' + fmt(totalBiaya) + 
+      ' = <strong style="color:#721C24;">' + fmt(selisihUsaha) + '</strong>' +
+      '<br><span class="status-badge defisit" style="margin-top:5px;">&#9888; Usaha ' + data.nama.toLowerCase() + ' merugi, perlu efisiensi</span>';
+  } else {
+    kesimpulan.textContent = 'Impas / Break Even';
+    kesimpulan.style.color = '#383D41';
+    kesimpulanNote.innerHTML = 
+      'Pendapatan ' + fmt(data.produksi) + ' = Pengeluaran ' + fmt(totalBiaya) +
+      '<br><span class="status-badge neutral" style="margin-top:5px;">&#8226; Usaha ' + data.nama.toLowerCase() + ' stabil</span>';
+  }
+
+  const toast = document.getElementById('toast');
+  toast.style.display = 'block';
+  setTimeout(() => { toast.style.display = 'none'; }, 1500);
+}
+
+function resetData() {
+  // Reset komoditas ke Padi
+  document.querySelectorAll('.komoditas-btn').forEach(b => {
+    b.classList.remove('selected-padi', 'selected-jagung');
+  });
+  document.querySelector('[data-komoditas="padi"]').classList.add('selected-padi');
+  komoditasSaatIni = 'padi';
+  document.getElementById('komoditasBadge').className = 'komoditas-badge padi';
+  document.getElementById('komoditasBadge').textContent = '🌾 Padi';
+
+  // Reset luas ke 2500
+  document.querySelectorAll('.luas-btn').forEach(b => b.classList.remove('selected'));
+  document.querySelector('[data-val="2500"]').classList.add('selected');
+  document.getElementById('customLuasWrap').style.display = 'none';
+  document.getElementById('customLuas').value = '';
+  luasSaatIni = 2500;
+  
+  updateData(2500);
+}
+
+window.addEventListener('load', function() {
+  updateData(2500);
+});
+</script>
+
+</body>
+</html>
