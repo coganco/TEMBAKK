@@ -3,140 +3,476 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FASIH SE 2026 — Simulasi Multi Sektor Usaha</title>
+<title>FASIH SE 2026 — Simulasi Multi Sektor</title>
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --green:#3B6D11;--green-light:#EAF3DE;--green-mid:#639922;--green-dark:#27500A;
-  --amber:#BA7517;--amber-light:#FAEEDA;--gray:#5F5E5A;--gray-light:#F1EFE8;
-  --gray-mid:#D3D1C7;--text:#2C2C2A;--text-muted:#5F5E5A;--text-hint:#888780;
-  --border:#D3D1C7;--bg:#F8F6F1;--surface:#FFFFFF;--radius:10px;--radius-sm:6px;
-  --blue:#185FA5;--blue-light:#E6F1FB;--blue-mid:#378ADD;
+  --c-bg:#0D1117;
+  --c-surface:#161B22;
+  --c-surface2:#1C2333;
+  --c-surface3:#21262D;
+  --c-border:#30363D;
+  --c-border2:#3D444D;
+  --c-text:#E6EDF3;
+  --c-text2:#8B949E;
+  --c-text3:#656D76;
+  --c-green:#3FB950;
+  --c-green2:#238636;
+  --c-green-dim:#1C3828;
+  --c-green-glow:rgba(63,185,80,0.15);
+  --c-amber:#F0883E;
+  --c-amber2:#D9730D;
+  --c-amber-dim:#3D2C1E;
+  --c-red:#F85149;
+  --c-red-dim:#3D1F1E;
+  --c-blue:#58A6FF;
+  --c-blue-dim:#1D3554;
+  --c-purple:#BC8CFF;
+  --c-purple-dim:#2D1F4E;
+  --c-gold:#FFD700;
+  --c-gold-dim:#3D3010;
+  --radius:12px;
+  --radius-sm:8px;
+  --radius-xs:5px;
 }
-body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.6;min-height:100vh}
-.topbar{background:var(--green-dark);color:#C0DD97;padding:8px 0;text-align:center;font-size:11px;letter-spacing:.06em;font-weight:500}
-.pghead{background:var(--green);color:#EAF3DE;padding:20px 20px 16px}
-.pghead .eye{font-size:11px;font-weight:600;letter-spacing:.08em;color:#C0DD97;margin-bottom:4px}
-.pghead h1{font-size:20px;font-weight:700;color:#fff;margin-bottom:2px}
-.pghead p{font-size:12px;color:#9FE1CB}
-.cont{max-width:680px;margin:0 auto;padding:16px 14px 32px}
-.slbl{font-size:11px;font-weight:700;letter-spacing:.06em;color:var(--green);text-transform:uppercase;margin-bottom:7px;display:flex;align-items:center;gap:7px}
-.slbl::after{content:'';flex:1;height:1px;background:var(--green-light)}
-.sec{margin-bottom:18px}
-.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;margin-bottom:8px}
-.flbl{font-size:12px;color:var(--text-muted);margin-bottom:5px}
-.flbl strong{color:var(--text);font-weight:600;display:block;margin-bottom:2px}
-.info-box{background:#FFF8E7;border:1px solid #EF9F27;border-radius:var(--radius-sm);padding:10px 12px;margin-top:8px;font-size:12px;color:#854F0B}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;background:var(--c-bg);color:var(--c-text);font-size:14px;line-height:1.6;min-height:100vh;overflow-x:hidden}
 
-/* Preset ukuran */
-.preset-lbl{font-size:11px;font-weight:700;color:var(--text-muted);margin-bottom:6px}
-.preset-grid{display:flex;flex-wrap:wrap;gap:6px}
-.preset-btn{padding:8px 12px;border:1.5px solid var(--border);border-radius:20px;background:var(--surface);cursor:pointer;font-family:inherit;font-size:12px;font-weight:700;color:var(--text);transition:all .15s}
-.preset-btn:hover{border-color:var(--blue-mid);background:var(--blue-light)}
-.preset-btn.aktif{border-color:var(--blue);background:var(--blue);color:#fff}
+/* ── NAV BAR ── */
+.navbar{
+  position:sticky;top:0;z-index:100;
+  background:rgba(13,17,23,0.85);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--c-border);
+  padding:0 20px;display:flex;align-items:center;
+  height:54px;gap:12px;
+}
+.nav-logo{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:700;color:var(--c-text);letter-spacing:-.01em;flex:1}
+.nav-logo span{color:var(--c-green)}
+.nav-badge{font-size:10px;font-weight:600;background:var(--c-green2);color:#fff;padding:2px 7px;border-radius:10px;letter-spacing:.04em}
+.nav-tabs{display:flex;gap:4px}
+.nav-tab{
+  padding:6px 14px;border-radius:var(--radius-xs);font-size:13px;font-weight:500;
+  cursor:pointer;border:none;font-family:'Inter',sans-serif;
+  color:var(--c-text2);background:transparent;transition:all .2s;
+}
+.nav-tab:hover{background:var(--c-surface3);color:var(--c-text)}
+.nav-tab.aktif{background:var(--c-surface3);color:var(--c-green);border:1px solid var(--c-green2)}
 
-/* Sektor grid */
-.sector-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:7px}
-.sector-btn{padding:10px 6px;border:1.5px solid var(--border);border-radius:var(--radius);background:var(--surface);cursor:pointer;text-align:center;font-family:inherit;transition:all .15s}
-.sector-btn .ico{font-size:22px;display:block;margin-bottom:3px}
-.sector-btn .nm{font-size:12px;font-weight:700;color:var(--text);display:block}
-.sector-btn .sb{font-size:10px;color:var(--text-hint);display:block}
-.sector-btn:hover{border-color:var(--green-mid);background:var(--green-light)}
-.sector-btn.aktif{border-color:var(--green);background:var(--green-light)}
-.sector-btn.aktif .nm{color:var(--green-dark)}
+/* ── PAGES ── */
+.page{display:none;animation:fadeUp .3s ease}
+.page.aktif{display:block}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
 
-/* Usaha grid */
+/* ── HERO ── */
+.hero{
+  background:linear-gradient(135deg,#0D1117 0%,#0A1628 50%,#0D1117 100%);
+  border-bottom:1px solid var(--c-border);
+  padding:32px 20px 24px;position:relative;overflow:hidden;
+}
+.hero::before{
+  content:'';position:absolute;top:-40px;right:-60px;
+  width:300px;height:300px;
+  background:radial-gradient(circle,rgba(63,185,80,.08) 0%,transparent 70%);
+  pointer-events:none;
+}
+.hero::after{
+  content:'';position:absolute;bottom:-60px;left:-40px;
+  width:250px;height:250px;
+  background:radial-gradient(circle,rgba(88,166,255,.05) 0%,transparent 70%);
+  pointer-events:none;
+}
+.hero-inner{max-width:700px;margin:0 auto;position:relative;z-index:1}
+.hero-eye{font-size:11px;font-weight:600;color:var(--c-green);letter-spacing:.12em;text-transform:uppercase;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.hero-eye::before{content:'';width:18px;height:2px;background:var(--c-green);display:inline-block}
+.hero-title{font-family:'Space Grotesk',sans-serif;font-size:28px;font-weight:700;color:var(--c-text);line-height:1.2;margin-bottom:6px}
+.hero-title span{color:var(--c-green)}
+.hero-sub{font-size:13px;color:var(--c-text2)}
+
+/* ── CONTENT ── */
+.cont{max-width:700px;margin:0 auto;padding:20px 16px 48px}
+
+/* ── SECTION LABEL ── */
+.slbl{
+  font-size:10px;font-weight:700;letter-spacing:.1em;
+  color:var(--c-text3);text-transform:uppercase;
+  margin-bottom:10px;display:flex;align-items:center;gap:8px;
+}
+.slbl::after{content:'';flex:1;height:1px;background:var(--c-border)}
+
+/* ── CARD ── */
+.card{background:var(--c-surface);border:1px solid var(--c-border);border-radius:var(--radius);padding:14px 16px;margin-bottom:10px}
+
+/* ── SECTOR GRID ── */
+.sector-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:10px}
+.sector-btn{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:12px 6px;border:1.5px solid var(--c-border);border-radius:var(--radius-sm);
+  background:var(--c-surface);cursor:pointer;font-family:'Inter',sans-serif;
+  transition:all .18s;gap:4px;position:relative;overflow:hidden;
+}
+.sector-btn::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse at top,var(--c-green-glow),transparent 70%);
+  opacity:0;transition:opacity .18s;
+}
+.sector-btn:hover{border-color:var(--c-green2);background:var(--c-surface2)}
+.sector-btn:hover::before{opacity:1}
+.sector-btn.aktif{border-color:var(--c-green);background:var(--c-green-dim)}
+.sector-btn.aktif::before{opacity:1}
+.sector-btn .ico{font-size:22px;display:block}
+.sector-btn .nm{font-size:11px;font-weight:600;color:var(--c-text);display:block;text-align:center}
+.sector-btn .sb{font-size:9px;color:var(--c-text3);display:block;text-align:center}
+.sector-btn.aktif .nm{color:var(--c-green)}
+
+/* ── USAHA GRID ── */
 .usaha-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
-.usaha-btn{padding:9px 10px;border:1.5px solid var(--border);border-radius:var(--radius-sm);background:var(--surface);cursor:pointer;text-align:left;font-family:inherit;transition:all .15s}
-.usaha-btn:hover{border-color:var(--green-mid);background:var(--green-light)}
-.usaha-btn .unm{font-size:12px;font-weight:700;color:var(--text);display:block}
-.usaha-btn .ukbli{font-size:10px;color:var(--text-hint);display:block;margin-top:2px}
-.usaha-btn.aktif{border-color:var(--green);background:var(--green-light)}
-.usaha-btn.aktif .unm{color:var(--green-dark)}
-.usaha-btn.aktif .ukbli{color:var(--green)}
+.usaha-btn{
+  padding:10px 12px;border:1.5px solid var(--c-border);border-radius:var(--radius-sm);
+  background:var(--c-surface);cursor:pointer;text-align:left;
+  font-family:'Inter',sans-serif;transition:all .18s;
+}
+.usaha-btn:hover{border-color:var(--c-blue);background:var(--c-blue-dim)}
+.usaha-btn.aktif{border-color:var(--c-blue);background:var(--c-blue-dim)}
+.usaha-btn .unm{font-size:12px;font-weight:600;color:var(--c-text);display:block}
+.usaha-btn .ukbli{font-size:10px;color:var(--c-text3);display:block;margin-top:2px}
+.usaha-btn.aktif .unm{color:var(--c-blue)}
 
-/* KBLI Box */
-.kbli-box{background:var(--blue-light);border:1px solid #B5D4F4;border-radius:var(--radius-sm);padding:10px 13px;margin-bottom:10px}
-.kbli-code{font-size:18px;font-weight:700;color:#0C447C}
-.kbli-nm{font-size:12px;color:var(--blue);margin-top:2px;font-weight:600}
-.kbli-sub{font-size:11px;color:var(--blue-mid);margin-top:2px}
+/* ── KBLI BOX ── */
+.kbli-box{
+  background:linear-gradient(135deg,var(--c-blue-dim),var(--c-surface));
+  border:1px solid rgba(88,166,255,.25);
+  border-radius:var(--radius-sm);padding:12px 14px;margin-bottom:10px;
+  display:flex;align-items:flex-start;gap:14px;
+}
+.kbli-code-badge{
+  background:var(--c-blue);color:#fff;
+  border-radius:var(--radius-xs);padding:4px 10px;
+  font-size:16px;font-weight:700;font-family:'Space Grotesk',sans-serif;
+  white-space:nowrap;flex-shrink:0;
+}
+.kbli-nm{font-size:12px;font-weight:600;color:var(--c-text);display:block}
+.kbli-sub{font-size:11px;color:var(--c-text2);display:block;margin-top:2px}
 
-/* Masalah */
+/* ── PRESET ── */
+.preset-wrap{margin-top:10px}
+.preset-lbl{font-size:10px;font-weight:600;color:var(--c-text3);margin-bottom:6px;letter-spacing:.04em;text-transform:uppercase}
+.preset-grid{display:flex;flex-wrap:wrap;gap:5px}
+.preset-btn{
+  padding:6px 12px;border:1.5px solid var(--c-border2);
+  border-radius:20px;background:var(--c-surface);
+  cursor:pointer;font-family:'Inter',sans-serif;font-size:11px;font-weight:600;
+  color:var(--c-text2);transition:all .15s;
+}
+.preset-btn:hover{border-color:var(--c-purple);color:var(--c-purple);background:var(--c-purple-dim)}
+.preset-btn.aktif{border-color:var(--c-purple);background:var(--c-purple);color:#fff}
+
+/* ── MASALAH ── */
 .masalah-list{display:flex;flex-direction:column;gap:5px}
-.masalah-item{display:flex;align-items:flex-start;gap:8px;padding:8px 11px;border-radius:var(--radius-sm);cursor:pointer;border:1.5px solid var(--border);background:var(--surface);font-family:inherit;text-align:left;transition:all .15s;width:100%}
-.masalah-item:hover{border-color:var(--amber);background:var(--amber-light)}
-.masalah-item.aktif{border-color:var(--amber);background:var(--amber-light)}
-.mico{font-size:16px;flex-shrink:0;margin-top:1px}
-.mtxt{flex:1}
-.mnm{font-size:12px;font-weight:700;color:var(--text);display:block}
-.mdesc{font-size:11px;color:var(--text-muted);display:block;margin-top:1px}
-.masalah-item.aktif .mnm{color:#633806}
-.masalah-item.aktif .mdesc{color:#854F0B}
-.masalah-aktif-box{background:#FFF8E7;border:1.5px solid #EF9F27;border-radius:var(--radius-sm);padding:10px 13px;margin-top:8px}
-.mab-title{font-size:11px;font-weight:700;color:#633806}
-.mab-dampak{font-size:12px;color:#854F0B;margin-top:4px}
-.mab-rek{font-size:11px;color:var(--amber);margin-top:6px;padding-top:6px;border-top:1px solid #FAC775}
+.masalah-item{
+  display:flex;align-items:flex-start;gap:10px;padding:10px 12px;
+  border-radius:var(--radius-sm);cursor:pointer;border:1.5px solid var(--c-border);
+  background:var(--c-surface);font-family:'Inter',sans-serif;text-align:left;
+  transition:all .15s;width:100%;
+}
+.masalah-item:hover{border-color:var(--c-amber2);background:var(--c-amber-dim)}
+.masalah-item.aktif{border-color:var(--c-amber);background:var(--c-amber-dim)}
+.mico{font-size:17px;flex-shrink:0;margin-top:1px}
+.mnm{font-size:12px;font-weight:600;color:var(--c-text);display:block}
+.mdesc{font-size:11px;color:var(--c-text2);display:block;margin-top:1px}
+.masalah-item.aktif .mnm{color:var(--c-amber)}
+.masalah-aktif-box{
+  background:var(--c-amber-dim);border:1px solid rgba(240,136,62,.25);
+  border-radius:var(--radius-sm);padding:12px 14px;margin-top:8px;
+}
+.mab-title{font-size:10px;font-weight:700;color:var(--c-amber);text-transform:uppercase;letter-spacing:.05em}
+.mab-dampak{font-size:12px;color:var(--c-text2);margin-top:5px}
+.mab-rek{font-size:11px;color:var(--c-amber2);margin-top:8px;padding-top:8px;border-top:1px solid rgba(240,136,62,.2)}
 
-/* Tabel Q26/Q27 */
-.panen-info{background:var(--green-light);border:1px solid #97C459;border-radius:var(--radius-sm);padding:8px 12px;margin-bottom:10px;font-size:12px;color:var(--green-dark);display:none}
-.pen-row{display:grid;grid-template-columns:1fr auto;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--gray-light)}
-.pen-row:last-child{border-bottom:none}
-.plbl{font-size:11px;color:var(--text-muted)}
-.plbl strong{display:block;font-size:12px;color:var(--text);font-weight:700}
-.pval{font-size:13px;font-weight:700;color:var(--green-dark);min-width:120px;text-align:right}
-.total-bar{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:var(--green-light);border:1.5px solid var(--green-mid);border-radius:var(--radius);margin-top:4px}
-.total-lbl{font-size:11px;font-weight:700;color:var(--green-dark)}
-.total-val{font-size:16px;font-weight:700;color:var(--green)}
-.divider{height:1px;background:var(--border);margin:8px 0}
+/* ── UNIT INFO ── */
+.unit-label{font-size:12px;font-weight:600;color:var(--c-text);display:block;margin-bottom:4px}
+.unit-info{font-size:11px;color:var(--c-text2);display:block;margin-bottom:6px}
+.unit-box{
+  background:var(--c-surface3);border:1px solid var(--c-border2);
+  border-radius:var(--radius-xs);padding:8px 12px;font-size:12px;color:var(--c-text2);
+}
 
-/* Highlight boxes */
-.hbox{border-radius:var(--radius);padding:11px 15px;margin-top:10px}
-.hbox-amber{background:#FFF8E7;border:1.5px solid var(--amber)}
-.hbox-green{background:var(--green-light);border:1.5px solid var(--green-mid)}
-.htitle{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.04em}
-.htitle-amber{color:#854F0B}
-.htitle-green{color:var(--green-dark)}
-.hamount{font-size:18px;font-weight:700;margin-top:2px}
-.hnote{font-size:11px;color:var(--text-muted);margin-top:2px}
-.badge{display:inline-block;padding:2px 9px;border-radius:10px;font-size:11px;font-weight:600}
-.b-surplus{background:#D4EDDA;color:#155724}
-.b-defisit{background:#F8D7DA;color:#721C24}
-.b-neutral{background:#E2E3E5;color:#383D41}
+/* ── Q26/Q27 ROWS ── */
+.pen-table{width:100%}
+.pen-row{
+  display:grid;grid-template-columns:1fr auto;
+  align-items:center;gap:10px;
+  padding:9px 0;border-bottom:1px solid var(--c-border);
+}
+.pen-row:last-child{border-bottom:none;padding-bottom:0}
+.plbl{font-size:11px;color:var(--c-text2)}
+.plbl strong{display:block;font-size:12px;font-weight:600;color:var(--c-text);margin-bottom:1px}
+.pval{
+  font-size:13px;font-weight:700;color:var(--c-green);
+  font-family:'Space Grotesk',sans-serif;min-width:120px;text-align:right;
+  white-space:nowrap;
+}
+.total-row{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:11px 14px;
+  background:linear-gradient(135deg,var(--c-green-dim),transparent);
+  border:1px solid var(--c-green2);border-radius:var(--radius-sm);
+  margin-top:8px;
+}
+.total-lbl{font-size:11px;font-weight:600;color:var(--c-text2)}
+.total-val{font-size:16px;font-weight:700;color:var(--c-green);font-family:'Space Grotesk',sans-serif}
 
-/* Tombol */
-.btn-group{display:flex;gap:7px;margin-top:10px}
-.btn-reset{flex:1;padding:11px;border-radius:var(--radius);font-size:13px;font-weight:700;cursor:pointer;border:none;font-family:inherit;background:var(--amber);color:#fff}
-.btn-reset:hover{background:#9E6514}
-.btn-ai{flex:1;padding:11px;border-radius:var(--radius);font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;background:var(--surface);color:var(--text);border:1.5px solid var(--border)}
-.btn-ai:hover{background:var(--gray-light)}
-.footer{text-align:center;font-size:10px;color:var(--text-hint);margin-top:14px;border-top:1px solid var(--border);padding-top:10px}
+/* ── SUMMARY CARDS ── */
+.summary-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.sum-card{border-radius:var(--radius-sm);padding:14px;border:1px solid var(--c-border)}
+.sum-card.income{background:linear-gradient(135deg,var(--c-green-dim),var(--c-surface));border-color:var(--c-green2)}
+.sum-card.expense{background:linear-gradient(135deg,var(--c-amber-dim),var(--c-surface));border-color:var(--c-amber2)}
+.sum-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px}
+.sum-label.inc{color:var(--c-green)}
+.sum-label.exp{color:var(--c-amber)}
+.sum-amount{font-size:17px;font-weight:700;font-family:'Space Grotesk',sans-serif}
+.sum-amount.inc{color:var(--c-green)}
+.sum-amount.exp{color:var(--c-amber)}
+.sum-note{font-size:10px;color:var(--c-text3);margin-top:3px}
 
-@media(max-width:480px){
+/* ── SELISIH BOX ── */
+.selisih-box{
+  border-radius:var(--radius);padding:16px 18px;
+  margin-top:8px;border:1.5px solid;transition:all .3s;
+}
+.selisih-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:5px}
+.selisih-amount{font-size:26px;font-weight:800;font-family:'Space Grotesk',sans-serif;margin-bottom:4px}
+.selisih-status{font-size:12px;font-weight:500;margin-top:6px;padding-top:10px;border-top:1px solid rgba(255,255,255,.08)}
+.selisih-detail{font-size:12px;margin-top:4px}
+
+.selisih-surplus .selisih-box{background:linear-gradient(135deg,rgba(63,185,80,.12),transparent);border-color:var(--c-green2)}
+.selisih-surplus .selisih-label{color:var(--c-green)}
+.selisih-surplus .selisih-amount{color:var(--c-green)}
+.selisih-surplus .selisih-status{color:var(--c-green)}
+
+.selisih-defisit .selisih-box{background:linear-gradient(135deg,rgba(248,81,73,.1),transparent);border-color:var(--c-red)}
+.selisih-defisit .selisih-label{color:var(--c-red)}
+.selisih-defisit .selisih-amount{color:var(--c-red)}
+.selisih-defisit .selisih-status{color:var(--c-red)}
+
+.selisih-impas .selisih-box{background:linear-gradient(135deg,rgba(139,148,158,.08),transparent);border-color:var(--c-border2)}
+.selisih-impas .selisih-label{color:var(--c-text2)}
+.selisih-impas .selisih-amount{color:var(--c-text2)}
+
+/* ── BADGE ── */
+.badge{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:10px;font-size:11px;font-weight:600}
+.badge-green{background:rgba(63,185,80,.15);color:var(--c-green);border:1px solid rgba(63,185,80,.25)}
+.badge-red{background:rgba(248,81,73,.15);color:var(--c-red);border:1px solid rgba(248,81,73,.25)}
+.badge-gray{background:rgba(139,148,158,.1);color:var(--c-text2);border:1px solid var(--c-border)}
+
+/* ── PANEN INFO ── */
+.panen-info{
+  display:none;background:var(--c-green-dim);border:1px solid var(--c-green2);
+  border-radius:var(--radius-xs);padding:8px 12px;
+  font-size:12px;color:var(--c-green);margin-bottom:10px;font-weight:500;
+}
+
+/* ── BTN GROUP ── */
+.btn-group{display:flex;gap:8px;margin-top:16px}
+.btn-reset{
+  flex:1;padding:11px;border-radius:var(--radius-sm);font-size:13px;
+  font-weight:600;cursor:pointer;border:none;font-family:'Inter',sans-serif;
+  background:var(--c-surface3);color:var(--c-text2);
+  border:1px solid var(--c-border2);transition:all .15s;
+}
+.btn-reset:hover{background:var(--c-surface2);color:var(--c-text)}
+.btn-print{
+  padding:11px 20px;border-radius:var(--radius-sm);font-size:13px;
+  font-weight:600;cursor:pointer;border:none;font-family:'Inter',sans-serif;
+  background:var(--c-green2);color:#fff;transition:all .15s;
+}
+.btn-print:hover{background:var(--c-green)}
+
+/* ── FOOTER ── */
+.page-footer{
+  text-align:center;font-size:10px;color:var(--c-text3);
+  margin-top:20px;padding-top:16px;border-top:1px solid var(--c-border);
+}
+
+/* ═══════════════════════════════════════════
+   PAGE 2 — PENGELUARAN KELUARGA (Q16)
+   ═══════════════════════════════════════════ */
+.q16-hero{
+  background:linear-gradient(135deg,#0D1117 0%,#1A0D28 50%,#0D1117 100%);
+  border-bottom:1px solid var(--c-border);
+  padding:32px 20px 24px;position:relative;overflow:hidden;
+}
+.q16-hero::before{
+  content:'';position:absolute;top:-40px;right:-60px;
+  width:280px;height:280px;
+  background:radial-gradient(circle,rgba(188,140,255,.08) 0%,transparent 70%);
+  pointer-events:none;
+}
+.q16-hero-inner{max-width:700px;margin:0 auto;position:relative;z-index:1}
+
+/* Kategori Q16 */
+.q16-kategori-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px}
+.q16-kat{
+  background:var(--c-surface);border:1.5px solid var(--c-border);
+  border-radius:var(--radius);padding:14px 12px;text-align:center;
+  cursor:pointer;transition:all .18s;
+}
+.q16-kat:hover{border-color:var(--c-purple);background:var(--c-purple-dim)}
+.q16-kat.aktif{border-color:var(--c-purple);background:var(--c-purple-dim)}
+.q16-kat .ico{font-size:24px;display:block;margin-bottom:5px}
+.q16-kat .nm{font-size:12px;font-weight:600;color:var(--c-text)}
+.q16-kat .sub{font-size:10px;color:var(--c-text3);margin-top:2px}
+.q16-kat.aktif .nm{color:var(--c-purple)}
+
+/* Q16 Input Panel */
+.q16-panel{display:none}
+.q16-panel.aktif{display:block;animation:fadeUp .25s ease}
+
+/* Range Slider */
+.q16-row{margin-bottom:18px}
+.q16-row-header{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px}
+.q16-qnum{font-size:11px;font-weight:700;color:var(--c-purple);letter-spacing:.04em}
+.q16-qtxt{font-size:13px;font-weight:500;color:var(--c-text);margin:3px 0 6px}
+.q16-qtip{font-size:11px;color:var(--c-text3);margin-bottom:8px}
+.q16-amount-display{font-size:20px;font-weight:700;font-family:'Space Grotesk',sans-serif;color:var(--c-purple)}
+.q16-amount-period{font-size:11px;color:var(--c-text3);margin-left:4px;font-weight:400}
+
+/* Custom range */
+.q16-range-wrap{position:relative;padding:4px 0}
+input[type=range]{
+  -webkit-appearance:none;appearance:none;
+  width:100%;height:6px;border-radius:3px;outline:none;cursor:pointer;
+  background:var(--c-border2);
+}
+input[type=range]::-webkit-slider-thumb{
+  -webkit-appearance:none;appearance:none;
+  width:20px;height:20px;border-radius:50%;
+  background:var(--c-purple);border:3px solid var(--c-surface);
+  box-shadow:0 0 0 2px var(--c-purple);cursor:pointer;transition:transform .15s;
+}
+input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.15)}
+input[type=range]::-moz-range-thumb{
+  width:20px;height:20px;border-radius:50%;
+  background:var(--c-purple);border:3px solid var(--c-surface);
+  box-shadow:0 0 0 2px var(--c-purple);cursor:pointer;
+}
+.range-ticks{display:flex;justify-content:space-between;margin-top:6px}
+.range-tick{font-size:9px;color:var(--c-text3)}
+
+/* Pilihan Cepat Q16 */
+.q16-quick{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px}
+.q16-chip{
+  padding:4px 10px;border:1px solid var(--c-border2);border-radius:20px;
+  background:var(--c-surface);font-size:11px;font-weight:500;color:var(--c-text2);
+  cursor:pointer;transition:all .15s;
+}
+.q16-chip:hover{border-color:var(--c-purple);color:var(--c-purple);background:var(--c-purple-dim)}
+.q16-chip.aktif{border-color:var(--c-purple);background:var(--c-purple);color:#fff}
+
+/* Ringkasan Q16 */
+.q16-summary{
+  background:linear-gradient(135deg,var(--c-purple-dim),var(--c-surface));
+  border:1px solid rgba(188,140,255,.25);border-radius:var(--radius);
+  padding:16px;margin-top:8px;
+}
+.q16-sum-title{
+  font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;
+  color:var(--c-purple);margin-bottom:12px;
+}
+.q16-sum-row{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:7px 0;border-bottom:1px solid rgba(188,140,255,.1);
+}
+.q16-sum-row:last-child{border-bottom:none}
+.q16-sum-lbl{font-size:12px;color:var(--c-text2)}
+.q16-sum-val{font-size:13px;font-weight:700;color:var(--c-purple);font-family:'Space Grotesk',sans-serif}
+.q16-total-box{
+  display:flex;justify-content:space-between;align-items:center;
+  background:rgba(188,140,255,.12);border:1px solid rgba(188,140,255,.3);
+  border-radius:var(--radius-sm);padding:12px 14px;margin-top:10px;
+}
+.q16-total-lbl{font-size:11px;font-weight:600;color:var(--c-purple)}
+.q16-total-val{font-size:22px;font-weight:800;font-family:'Space Grotesk',sans-serif;color:var(--c-purple)}
+
+/* Analisis tambahan */
+.q16-analisis{
+  background:var(--c-surface);border:1px solid var(--c-border);
+  border-radius:var(--radius);padding:14px;margin-top:10px;
+}
+.q16-analisis-title{font-size:11px;font-weight:600;color:var(--c-text2);margin-bottom:10px}
+.q16-pie-row{display:flex;gap:8px;align-items:center;margin-bottom:6px}
+.q16-pie-bar{height:8px;border-radius:4px;transition:width .4s ease;min-width:4px}
+.q16-pie-lbl{font-size:11px;color:var(--c-text3);white-space:nowrap}
+.q16-pie-pct{font-size:11px;font-weight:600;color:var(--c-text);margin-left:auto;font-family:'Space Grotesk',sans-serif}
+
+/* Divider */
+.divider{height:1px;background:var(--c-border);margin:14px 0}
+
+/* Mobile responsive */
+@media(max-width:520px){
   .sector-grid{grid-template-columns:repeat(2,1fr)}
   .usaha-grid{grid-template-columns:1fr}
+  .summary-grid{grid-template-columns:1fr}
   .btn-group{flex-direction:column}
+  .q16-kategori-grid{grid-template-columns:1fr}
+  .hero-title{font-size:22px}
 }
+
+/* Tooltip / info */
+.info-tag{
+  display:inline-flex;align-items:center;gap:4px;
+  font-size:10px;color:var(--c-text3);font-weight:500;
+  background:var(--c-surface3);border:1px solid var(--c-border);
+  border-radius:var(--radius-xs);padding:2px 7px;margin-left:6px;vertical-align:middle;
+}
+
+/* Scroll section */
+.sec{margin-bottom:20px}
+
+/* Print */
 @media print{
-  .topbar,.btn-group{display:none!important}
-  body{background:#fff}
-  .pghead{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .navbar,.btn-group,.nav-tabs{display:none!important}
+  body{background:#fff;color:#000}
+  .hero,.q16-hero{background:#fff;border:1px solid #ddd}
 }
 </style>
 </head>
 <body>
 
-<div class="topbar">BADAN PUSAT STATISTIK — FASIH SE 2026 — SIMULASI MULTI SEKTOR USAHA</div>
-<div class="pghead">
-  <div class="eye">2026</div>
-  <h1>TEAM TEMBAK SE26— Multi Sektor Usaha</h1>
-  <p>&nbsp;·&nbsp; Termasuk KBLI &amp; Skenario Masalah Lapangan</p>
+<!-- ── NAVBAR ── -->
+<nav class="navbar">
+  <div class="nav-logo">FASIH <span>SE26</span></div>
+  <span class="nav-badge">BPS 2026</span>
+  <div class="nav-tabs">
+    <button class="nav-tab aktif" id="tabUsaha" onclick="gotoPage('usaha')">
+      🏭 Usaha
+    </button>
+    <button class="nav-tab" id="tabKeluarga" onclick="gotoPage('keluarga')">
+      🏠 Pengeluaran Keluarga
+    </button>
+  </div>
+</nav>
+
+<!-- ════════════════════════════════════════════
+  PAGE 1 — SIMULASI USAHA
+════════════════════════════════════════════ -->
+<div id="pageUsaha" class="page aktif">
+
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-eye">Simulasi Multi Sektor</div>
+    <h1 class="hero-title">TEAM TEMBAK <span>SE 2026</span></h1>
+    <p class="hero-sub">Simulasi KBLI &amp; Skenario Masalah Lapangan · Latihan Petugas BPS</p>
+  </div>
 </div>
 
 <div class="cont">
 
   <!-- 1. Sektor -->
   <div class="sec">
-    <div class="slbl">1. Pilih sektor usaha</div>
+    <div class="slbl">1 &nbsp; Pilih Sektor Usaha</div>
     <div class="sector-grid" id="sektorGrid">
       <button class="sector-btn aktif" data-sektor="pertanian" onclick="pilihSektor(this)"><span class="ico">🌾</span><span class="nm">Pertanian</span><span class="sb">Tanaman pangan</span></button>
       <button class="sector-btn" data-sektor="perkebunan" onclick="pilihSektor(this)"><span class="ico">🌿</span><span class="nm">Perkebunan</span><span class="sb">Kopi, tebu, kelapa</span></button>
@@ -145,140 +481,513 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--
       <button class="sector-btn" data-sektor="perdagangan" onclick="pilihSektor(this)"><span class="ico">🏪</span><span class="nm">Perdagangan</span><span class="sb">Toko, warung, grosir</span></button>
       <button class="sector-btn" data-sektor="industri" onclick="pilihSektor(this)"><span class="ico">🏭</span><span class="nm">Industri</span><span class="sb">Pengolahan makanan</span></button>
       <button class="sector-btn" data-sektor="jasa" onclick="pilihSektor(this)"><span class="ico">🔧</span><span class="nm">Jasa</span><span class="sb">Bengkel, laundry</span></button>
-      <button class="sector-btn" data-sektor="kuliner" onclick="pilihSektor(this)"><span class="ico">🍜</span><span class="nm">Kuliner</span><span class="sb">Warung makan, kafe</span></button>
+      <button class="sector-btn" data-sektor="kuliner" onclick="pilihSektor(this)"><span class="ico">🍜</span><span class="nm">Kuliner</span><span class="sb">Warung, kafe</span></button>
     </div>
   </div>
 
   <!-- 2. Jenis Usaha -->
   <div class="sec">
-    <div class="slbl">2. Pilih jenis usaha</div>
+    <div class="slbl">2 &nbsp; Pilih Jenis Usaha</div>
     <div class="usaha-grid" id="usahaGrid"></div>
   </div>
 
   <!-- KBLI -->
-  <div id="kbliBox"></div>
+  <div id="kbliBox" class="sec"></div>
 
-  <!-- 3. Masalah Lapangan -->
+  <!-- 3. Ukuran -->
   <div class="sec">
-    <div class="slbl">3. Pilih skenario masalah lapangan</div>
+    <div class="slbl">3 &nbsp; Luas / Jumlah Usaha</div>
+    <div class="card">
+      <span class="unit-label" id="unitLabel">—</span>
+      <span class="unit-info" id="unitInfo">—</span>
+      <div class="unit-box" id="unitBox">—</div>
+      <div id="presetWrap" class="preset-wrap"></div>
+    </div>
+  </div>
+
+  <!-- 4. Masalah -->
+  <div class="sec">
+    <div class="slbl">4 &nbsp; Skenario Masalah Lapangan</div>
     <div class="masalah-list" id="masalahList"></div>
     <div id="masalahAktifBox"></div>
   </div>
 
-  <!-- Luas/Jumlah -->
-  <div class="sec">
-    <div class="slbl">4. Luas / jumlah usaha</div>
-    <div class="card">
-      <div class="flbl"><strong id="unitLabel">—</strong><span id="unitInfo">—</span></div>
-      <div class="info-box" id="unitBox">—</div>
-      <div id="presetWrap" style="margin-top:10px"></div>
-    </div>
-  </div>
-
   <!-- Q26 -->
   <div class="sec">
-    <div class="slbl">Pertanyaan 26 — pengeluaran usaha tahun 2025</div>
+    <div class="slbl">Pertanyaan 26 &nbsp; Pengeluaran Usaha Tahun 2025</div>
     <div class="card">
       <div class="panen-info" id="panenInfo"></div>
-      <div class="pen-row"><div class="plbl"><strong>26.a. Upah &amp; gaji tenaga kerja</strong>Termasuk jaminan sosial pegawai</div><div class="pval" id="p26a">Rp 0</div></div>
-      <div class="pen-row"><div class="plbl"><strong>26.b. Biaya produksi / pembelian barang</strong><span id="lbl26b">—</span></div><div class="pval" id="p26b">Rp 0</div></div>
-      <div class="pen-row"><div class="plbl"><strong>26.c. Biaya sewa / penyusutan aset</strong>Lahan, gudang, mesin, kendaraan</div><div class="pval" id="p26c">Rp 0</div></div>
-      <div class="pen-row"><div class="plbl"><strong>26.d. Biaya operasional</strong>Listrik, air, transport, promosi</div><div class="pval" id="p26d">Rp 0</div></div>
-      <div class="pen-row"><div class="plbl"><strong>26.e. Biaya non-operasional</strong>Bunga, asuransi, administrasi</div><div class="pval" id="p26e">Rp 0</div></div>
+      <div class="pen-table">
+        <div class="pen-row">
+          <div class="plbl"><strong>26.a &nbsp; Upah &amp; gaji tenaga kerja</strong>Termasuk jaminan sosial pegawai</div>
+          <div class="pval" id="p26a">Rp 0</div>
+        </div>
+        <div class="pen-row">
+          <div class="plbl"><strong>26.b &nbsp; Biaya produksi / pembelian barang</strong><span id="lbl26b">—</span></div>
+          <div class="pval" id="p26b">Rp 0</div>
+        </div>
+        <div class="pen-row">
+          <div class="plbl"><strong>26.c &nbsp; Biaya sewa / penyusutan aset</strong>Lahan, gudang, mesin, kendaraan</div>
+          <div class="pval" id="p26c">Rp 0</div>
+        </div>
+        <div class="pen-row">
+          <div class="plbl"><strong>26.d &nbsp; Biaya operasional</strong>Listrik, air, transport, promosi</div>
+          <div class="pval" id="p26d">Rp 0</div>
+        </div>
+        <div class="pen-row">
+          <div class="plbl"><strong>26.e &nbsp; Biaya non-operasional</strong>Bunga, asuransi, administrasi</div>
+          <div class="pval" id="p26e">Rp 0</div>
+        </div>
+      </div>
     </div>
-    <div class="total-bar">
-      <span class="total-lbl">26.f. Total pengeluaran (a+b+c+d+e)</span>
+    <div class="total-row">
+      <span class="total-lbl">26.f &nbsp; Total pengeluaran (a+b+c+d+e)</span>
       <span class="total-val" id="p26f">Rp 0</span>
     </div>
   </div>
 
   <!-- Q27 -->
   <div class="sec">
-    <div class="slbl">Pertanyaan 27 — nilai produksi / penjualan tahun 2025</div>
+    <div class="slbl">Pertanyaan 27 &nbsp; Nilai Produksi / Penjualan 2025</div>
     <div class="card">
-      <div class="pen-row"><div class="plbl"><strong>27.a. Nilai produksi / penjualan barang &amp; jasa</strong><span id="lbl27a">—</span></div><div class="pval" id="p27a">Rp 0</div></div>
-      <div class="divider"></div>
-      <div class="pen-row"><div class="plbl"><strong>27.b. Pendapatan lainnya</strong>Subsidi, bonus, jasa titip, dll.</div><div class="pval" id="p27b">Rp 0</div></div>
-      <div class="divider"></div>
-      <div class="pen-row" style="border-bottom:none;padding-bottom:0"><div class="plbl"><strong style="color:var(--green-dark)">27.c. Total nilai produksi / penjualan (a+b)</strong></div><div class="pval" style="font-size:15px;color:var(--green)" id="p27c">Rp 0</div></div>
+      <div class="pen-table">
+        <div class="pen-row">
+          <div class="plbl"><strong>27.a &nbsp; Nilai produksi / penjualan barang &amp; jasa</strong><span id="lbl27a">—</span></div>
+          <div class="pval" id="p27a">Rp 0</div>
+        </div>
+        <div class="pen-row" style="border-bottom:none;padding-bottom:0">
+          <div class="plbl"><strong>27.b &nbsp; Pendapatan lainnya</strong>Subsidi, bonus, jasa titip, dll.</div>
+          <div class="pval" id="p27b">Rp 0</div>
+        </div>
+      </div>
+    </div>
+    <div class="total-row" style="background:linear-gradient(135deg,var(--c-blue-dim),transparent);border-color:var(--c-blue)">
+      <span class="total-lbl" style="color:var(--c-blue)">27.c &nbsp; Total nilai produksi / penjualan (a+b)</span>
+      <span class="total-val" style="color:var(--c-blue);font-size:17px" id="p27c">Rp 0</span>
     </div>
   </div>
 
   <!-- Ringkasan -->
   <div class="sec">
-    <div class="slbl">Ringkasan keuangan</div>
-    <div class="hbox hbox-amber">
-      <div class="htitle htitle-amber">&#128200; Total pendapatan usaha (Q27)</div>
-      <div class="hamount" id="rPend">Rp 0</div>
-      <div class="hnote" id="rPendNote">—</div>
+    <div class="slbl">Ringkasan Keuangan Usaha</div>
+    <div class="summary-grid">
+      <div class="sum-card income">
+        <div class="sum-label inc">📈 Total Pendapatan (Q27)</div>
+        <div class="sum-amount inc" id="rPend">Rp 0</div>
+        <div class="sum-note" id="rPendNote">—</div>
+      </div>
+      <div class="sum-card expense">
+        <div class="sum-label exp">📊 Total Pengeluaran (Q26)</div>
+        <div class="sum-amount exp" id="rPeng">Rp 0</div>
+        <div class="sum-note">Semua komponen biaya usaha 2025</div>
+      </div>
     </div>
-    <div class="hbox hbox-green">
-      <div class="htitle htitle-green">&#128200; Total pengeluaran usaha (Q26)</div>
-      <div class="hamount" id="rPeng">Rp 0</div>
-      <div class="hnote">Semua komponen biaya usaha tahun 2025</div>
-    </div>
-    <div class="hbox" id="hboxSelisih">
-      <div class="htitle" id="hbSelTitle">&#128184; Selisih (pendapatan − pengeluaran)</div>
-      <div class="hamount" id="rSelisih">Rp 0</div>
-      <div class="hnote" id="rStatus"></div>
-    </div>
-    <div class="hbox" id="hboxKesimpulan" style="margin-top:8px">
-      <div class="htitle" id="hbKesTitle">&#128200; Kesimpulan akhir</div>
-      <div class="hamount" id="rKes" style="font-size:20px">—</div>
-      <div class="hnote" id="rKesNote"></div>
+    <div id="wrapSelisih" class="selisih-surplus">
+      <div class="selisih-box" id="hboxSelisih">
+        <div class="selisih-label" id="hbSelTitle">💰 Selisih (Pendapatan − Pengeluaran)</div>
+        <div class="selisih-amount" id="rSelisih">Rp 0</div>
+        <div class="selisih-status" id="rStatus"></div>
+        <div class="selisih-detail" id="rKesNote"></div>
+      </div>
     </div>
   </div>
 
   <div class="btn-group">
-    <button class="btn-reset" onclick="resetAll()">&#8634; Reset</button>
-    <button class="btn-ai" onclick="window.print()">&#128438; Cetak / PDF</button>
+    <button class="btn-reset" onclick="resetAll()">↺ &nbsp; Reset Pilihan</button>
+    <button class="btn-print" onclick="window.print()">🖨 &nbsp; Cetak / PDF</button>
   </div>
-  <div class="footer">FASIH SE 2026 — BPS &bull; Simulasi multi sektor dengan KBLI &amp; skenario masalah lapangan<br>Hanya untuk latihan petugas — bukan data resmi</div>
+  <div class="page-footer">FASIH SE 2026 — BPS &bull; Simulasi multi sektor &bull; KBLI &amp; skenario masalah lapangan<br>Hanya untuk latihan petugas — bukan data resmi</div>
+</div><!-- /cont -->
+</div><!-- /pageUsaha -->
+
+
+<!-- ════════════════════════════════════════════
+  PAGE 2 — PENGELUARAN KELUARGA Q16
+════════════════════════════════════════════ -->
+<div id="pageKeluarga" class="page">
+
+<div class="q16-hero">
+  <div class="q16-hero-inner">
+    <div class="hero-eye" style="color:var(--c-purple)">
+      <span style="display:inline-block;width:18px;height:2px;background:var(--c-purple)"></span>
+      Blok IV — Pengeluaran Rumah Tangga
+    </div>
+    <h1 class="hero-title" style="font-family:'Space Grotesk',sans-serif">Pengeluaran <span style="color:var(--c-purple)">Keluarga</span></h1>
+    <p class="hero-sub">Pertanyaan 16 · Rata-rata pengeluaran keluarga: makanan &amp; bukan makanan</p>
+  </div>
 </div>
 
+<div class="cont">
+
+  <!-- Pilih Kategori -->
+  <div class="sec">
+    <div class="slbl">Pilih Kategori Pengeluaran</div>
+    <div class="q16-kategori-grid">
+      <div class="q16-kat aktif" onclick="pilihKat('makanan')">
+        <span class="ico">🍽️</span>
+        <div class="nm">Makanan</div>
+        <div class="sub">Pertanyaan 16.a</div>
+      </div>
+      <div class="q16-kat" onclick="pilihKat('bukan_bulanan')">
+        <span class="ico">🧾</span>
+        <div class="nm">Bukan Makanan Bulanan</div>
+        <div class="sub">Pertanyaan 16.b</div>
+      </div>
+      <div class="q16-kat" onclick="pilihKat('bukan_tahunan')">
+        <span class="ico">📅</span>
+        <div class="nm">Bukan Makanan Tahunan</div>
+        <div class="sub">Pertanyaan 16.c</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── PANEL 16.a — MAKANAN SEMINGGU ── -->
+  <div id="panel-makanan" class="q16-panel aktif sec">
+    <div class="slbl">Pertanyaan 16.a &nbsp; Pengeluaran Makanan Seminggu</div>
+    <div class="card" style="background:var(--c-surface)">
+      <div class="q16-row">
+        <div class="q16-qnum">16.a</div>
+        <div class="q16-qtxt">Berapa rata-rata pengeluaran <strong style="color:var(--c-purple)">makanan keluarga seminggu?</strong></div>
+        <div class="q16-qtip">Termasuk: sembako, lauk-pauk, sayuran, buah, bumbu, minuman, makanan jadi/beli jadi</div>
+        <div class="q16-row-header" style="margin-top:8px">
+          <div>
+            <div class="q16-amount-display" id="disp16a">Rp 0</div>
+          </div>
+          <span style="font-size:10px;color:var(--c-text3)">/minggu</span>
+        </div>
+        <input type="range" id="range16a" min="0" max="2000000" step="25000" value="0" oninput="updateQ16('a',this.value)">
+        <div class="range-ticks">
+          <span class="range-tick">Rp 0</span>
+          <span class="range-tick">Rp 500rb</span>
+          <span class="range-tick">Rp 1 jt</span>
+          <span class="range-tick">Rp 1,5 jt</span>
+          <span class="range-tick">Rp 2 jt</span>
+        </div>
+        <div class="q16-quick" id="quick16a">
+          <span class="q16-chip" onclick="setQ16('a',100000)">Rp 100rb</span>
+          <span class="q16-chip" onclick="setQ16('a',200000)">Rp 200rb</span>
+          <span class="q16-chip" onclick="setQ16('a',350000)">Rp 350rb</span>
+          <span class="q16-chip" onclick="setQ16('a',500000)">Rp 500rb</span>
+          <span class="q16-chip" onclick="setQ16('a',750000)">Rp 750rb</span>
+          <span class="q16-chip" onclick="setQ16('a',1000000)">Rp 1 jt</span>
+          <span class="q16-chip" onclick="setQ16('a',1500000)">Rp 1,5 jt</span>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- Sub-item makanan -->
+      <div style="font-size:11px;font-weight:600;color:var(--c-text3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px">Rincian (opsional)</div>
+      <div class="q16-row">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+          <div>
+            <div style="font-size:11px;color:var(--c-text3);margin-bottom:4px">🌾 Pangan pokok (beras/roti)</div>
+            <div class="q16-quick" style="gap:3px">
+              <span class="q16-chip" style="font-size:10px" onclick="showTip('Termasuk beras, jagung, sagu, ubi — rata-rata Rp 50-100rb/minggu')">Lihat contoh</span>
+            </div>
+          </div>
+          <div>
+            <div style="font-size:11px;color:var(--c-text3);margin-bottom:4px">🥩 Lauk (daging/ikan/telur)</div>
+            <div class="q16-quick" style="gap:3px">
+              <span class="q16-chip" style="font-size:10px" onclick="showTip('Ikan, ayam, daging, telur, tahu/tempe — biasanya 40-60% dari total makanan')">Lihat contoh</span>
+            </div>
+          </div>
+          <div>
+            <div style="font-size:11px;color:var(--c-text3);margin-bottom:4px">🥦 Sayur &amp; buah</div>
+            <div class="q16-quick" style="gap:3px">
+              <span class="q16-chip" style="font-size:10px" onclick="showTip('Sayuran, buah-buahan segar — rata-rata Rp 30-80rb/minggu')">Lihat contoh</span>
+            </div>
+          </div>
+          <div>
+            <div style="font-size:11px;color:var(--c-text3);margin-bottom:4px">🍱 Makanan jadi/beli</div>
+            <div class="q16-quick" style="gap:3px">
+              <span class="q16-chip" style="font-size:10px" onclick="showTip('Nasi bungkus, jajan anak, pesan online — bisa 20-40% total makanan')">Lihat contoh</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="tipBox" style="display:none;background:var(--c-purple-dim);border:1px solid rgba(188,140,255,.25);border-radius:var(--radius-xs);padding:10px 12px;margin-top:8px;font-size:12px;color:var(--c-text2)"></div>
+    </div>
+
+    <!-- Proyeksi bulanan dan tahunan -->
+    <div class="q16-summary">
+      <div class="q16-sum-title">📊 Proyeksi dari Pengeluaran Makanan</div>
+      <div class="q16-sum-row">
+        <span class="q16-sum-lbl">Per minggu (Q16.a)</span>
+        <span class="q16-sum-val" id="proj16a_minggu">Rp 0</span>
+      </div>
+      <div class="q16-sum-row">
+        <span class="q16-sum-lbl">Proyeksi per bulan (×4,3)</span>
+        <span class="q16-sum-val" id="proj16a_bulan">Rp 0</span>
+      </div>
+      <div class="q16-sum-row" style="border-bottom:none">
+        <span class="q16-sum-lbl">Proyeksi per tahun (×52)</span>
+        <span class="q16-sum-val" id="proj16a_tahun">Rp 0</span>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:8px;background:var(--c-surface3);border-color:var(--c-border2)">
+      <div style="font-size:11px;color:var(--c-text3);font-weight:600;margin-bottom:6px">💡 PANDUAN PETUGAS — Pertanyaan 16.a</div>
+      <ul style="font-size:11px;color:var(--c-text2);padding-left:16px;display:flex;flex-direction:column;gap:4px">
+        <li>Tanyakan <strong style="color:var(--c-text)">pengeluaran 1 minggu terakhir</strong>, bukan perkiraan umum</li>
+        <li>Termasuk makanan yang dibeli, tapi <strong style="color:var(--c-text)">bukan yang ditanam/diproduksi sendiri</strong></li>
+        <li>Jika jawaban per hari, kalikan ×7 untuk seminggu</li>
+        <li>Jika sulit ingat, bantu dengan pertanyaan: "Berapa belanja ke pasar/warung per minggu?"</li>
+        <li>Rata-rata nasional: Rp 200rb–500rb/minggu untuk keluarga 4 orang</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ── PANEL 16.b — BUKAN MAKANAN BULANAN ── -->
+  <div id="panel-bukan_bulanan" class="q16-panel sec">
+    <div class="slbl">Pertanyaan 16.b &nbsp; Pengeluaran Bukan Makanan Bulanan</div>
+    <div class="card">
+      <div class="q16-row">
+        <div class="q16-qnum">16.b</div>
+        <div class="q16-qtxt">Berapa rata-rata pengeluaran <strong style="color:var(--c-purple)">bukan makanan rutin keluarga bulanan?</strong></div>
+        <div class="q16-qtip">Termasuk: listrik, air/PAM, gas LPG, pulsa/internet, transportasi harian, biaya anak sekolah bulanan, sewa kos, cicilan</div>
+        <div class="q16-row-header" style="margin-top:8px">
+          <div>
+            <div class="q16-amount-display" id="disp16b">Rp 0</div>
+          </div>
+          <span style="font-size:10px;color:var(--c-text3)">/bulan</span>
+        </div>
+        <input type="range" id="range16b" min="0" max="5000000" step="50000" value="0" oninput="updateQ16('b',this.value)">
+        <div class="range-ticks">
+          <span class="range-tick">Rp 0</span>
+          <span class="range-tick">Rp 1,25 jt</span>
+          <span class="range-tick">Rp 2,5 jt</span>
+          <span class="range-tick">Rp 3,75 jt</span>
+          <span class="range-tick">Rp 5 jt</span>
+        </div>
+        <div class="q16-quick" id="quick16b">
+          <span class="q16-chip" onclick="setQ16('b',200000)">Rp 200rb</span>
+          <span class="q16-chip" onclick="setQ16('b',500000)">Rp 500rb</span>
+          <span class="q16-chip" onclick="setQ16('b',750000)">Rp 750rb</span>
+          <span class="q16-chip" onclick="setQ16('b',1000000)">Rp 1 jt</span>
+          <span class="q16-chip" onclick="setQ16('b',1500000)">Rp 1,5 jt</span>
+          <span class="q16-chip" onclick="setQ16('b',2000000)">Rp 2 jt</span>
+          <span class="q16-chip" onclick="setQ16('b',3000000)">Rp 3 jt</span>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+      <div style="font-size:11px;font-weight:600;color:var(--c-text3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px">Komponen Umum (bukan makanan bulanan)</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:11px;color:var(--c-text2)">
+        <div style="background:var(--c-surface3);border-radius:var(--radius-xs);padding:8px">💡 Listrik &amp; air<br><span style="color:var(--c-text3)">Rp 100–500rb/bln</span></div>
+        <div style="background:var(--c-surface3);border-radius:var(--radius-xs);padding:8px">📱 Pulsa &amp; internet<br><span style="color:var(--c-text3)">Rp 50–200rb/bln</span></div>
+        <div style="background:var(--c-surface3);border-radius:var(--radius-xs);padding:8px">🚌 Transportasi<br><span style="color:var(--c-text3)">Rp 100–500rb/bln</span></div>
+        <div style="background:var(--c-surface3);border-radius:var(--radius-xs);padding:8px">🏫 Biaya sekolah<br><span style="color:var(--c-text3)">Rp 100–1jt/bln</span></div>
+        <div style="background:var(--c-surface3);border-radius:var(--radius-xs);padding:8px">🏠 Sewa/cicilan<br><span style="color:var(--c-text3)">Rp 300rb–3jt/bln</span></div>
+        <div style="background:var(--c-surface3);border-radius:var(--radius-xs);padding:8px">🧴 Perawatan tubuh<br><span style="color:var(--c-text3)">Rp 50–200rb/bln</span></div>
+      </div>
+    </div>
+
+    <div class="q16-summary">
+      <div class="q16-sum-title">📊 Proyeksi dari Pengeluaran Bukan Makanan Bulanan</div>
+      <div class="q16-sum-row">
+        <span class="q16-sum-lbl">Per bulan (Q16.b)</span>
+        <span class="q16-sum-val" id="proj16b_bulan">Rp 0</span>
+      </div>
+      <div class="q16-sum-row" style="border-bottom:none">
+        <span class="q16-sum-lbl">Proyeksi per tahun (×12)</span>
+        <span class="q16-sum-val" id="proj16b_tahun">Rp 0</span>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:8px;background:var(--c-surface3);border-color:var(--c-border2)">
+      <div style="font-size:11px;color:var(--c-text3);font-weight:600;margin-bottom:6px">💡 PANDUAN PETUGAS — Pertanyaan 16.b</div>
+      <ul style="font-size:11px;color:var(--c-text2);padding-left:16px;display:flex;flex-direction:column;gap:4px">
+        <li>Fokus pada pengeluaran <strong style="color:var(--c-text)">rutin setiap bulan</strong> di luar makanan</li>
+        <li>Tidak termasuk pembelian barang besar/tidak rutin (pakaian, perabot, dll — itu ada di 16.c)</li>
+        <li>Listrik, air, gas, pulsa, transportasi, cicilan, SPP anak — semua termasuk</li>
+        <li>Jika ada variasi antarbulan, minta rata-rata 3 bulan terakhir</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ── PANEL 16.c — BUKAN MAKANAN TAHUNAN ── -->
+  <div id="panel-bukan_tahunan" class="q16-panel sec">
+    <div class="slbl">Pertanyaan 16.c &nbsp; Pengeluaran Bukan Makanan Tahunan</div>
+    <div class="card">
+      <div class="q16-row">
+        <div class="q16-qnum">16.c</div>
+        <div class="q16-qtxt">Berapa rata-rata pengeluaran <strong style="color:var(--c-purple)">bukan makanan rutin keluarga tahunan?</strong></div>
+        <div class="q16-qtip">Termasuk: pakaian &amp; alas kaki, perabot rumah, perlengkapan rumah tangga, kesehatan tidak rutin, rekreasi/wisata, zakat/infak, pajak/PBB, biaya sekolah tahunan (SPP tahunan, seragam, buku)</div>
+        <div class="q16-row-header" style="margin-top:8px">
+          <div>
+            <div class="q16-amount-display" id="disp16c">Rp 0</div>
+          </div>
+          <span style="font-size:10px;color:var(--c-text3)">/tahun</span>
+        </div>
+        <input type="range" id="range16c" min="0" max="30000000" step="250000" value="0" oninput="updateQ16('c',this.value)">
+        <div class="range-ticks">
+          <span class="range-tick">Rp 0</span>
+          <span class="range-tick">Rp 7,5 jt</span>
+          <span class="range-tick">Rp 15 jt</span>
+          <span class="range-tick">Rp 22,5 jt</span>
+          <span class="range-tick">Rp 30 jt</span>
+        </div>
+        <div class="q16-quick" id="quick16c">
+          <span class="q16-chip" onclick="setQ16('c',1000000)">Rp 1 jt</span>
+          <span class="q16-chip" onclick="setQ16('c',2000000)">Rp 2 jt</span>
+          <span class="q16-chip" onclick="setQ16('c',3500000)">Rp 3,5 jt</span>
+          <span class="q16-chip" onclick="setQ16('c',5000000)">Rp 5 jt</span>
+          <span class="q16-chip" onclick="setQ16('c',7500000)">Rp 7,5 jt</span>
+          <span class="q16-chip" onclick="setQ16('c',10000000)">Rp 10 jt</span>
+          <span class="q16-chip" onclick="setQ16('c',15000000)">Rp 15 jt</span>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+      <div style="font-size:11px;font-weight:600;color:var(--c-text3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px">Komponen Umum (bukan makanan tahunan)</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:11px;color:var(--c-text2)">
+        <div style="background:var(--c-surface3);border-radius:var(--radius-xs);padding:8px">👕 Pakaian &amp; alas kaki<br><span style="color:var(--c-text3)">Rp 500rb–3jt/thn</span></div>
+        <div style="background:var(--c-surface3);border-radius:var(--radius-xs);padding:8px">🏠 Perabot &amp; peralatan<br><span style="color:var(--c-text3)">Rp 500rb–5jt/thn</span></div>
+        <div style="background:var(--c-surface3);border-radius:var(--radius-xs);padding:8px">🏥 Kesehatan/berobat<br><span style="color:var(--c-text3)">Rp 500rb–5jt/thn</span></div>
+        <div style="background:var(--c-surface3);border-radius:var(--radius-xs);padding:8px">✈️ Rekreasi &amp; wisata<br><span style="color:var(--c-text3)">Rp 0–5jt/thn</span></div>
+        <div style="background:var(--c-surface3);border-radius:var(--radius-xs);padding:8px">🕌 Zakat / Infak / Sedekah<br><span style="color:var(--c-text3)">Rp 100rb–3jt/thn</span></div>
+        <div style="background:var(--c-surface3);border-radius:var(--radius-xs);padding:8px">📄 Pajak &amp; administrasi<br><span style="color:var(--c-text3)">Rp 50–500rb/thn</span></div>
+      </div>
+    </div>
+
+    <div class="q16-summary">
+      <div class="q16-sum-title">📊 Proyeksi dari Pengeluaran Bukan Makanan Tahunan</div>
+      <div class="q16-sum-row">
+        <span class="q16-sum-lbl">Per tahun (Q16.c)</span>
+        <span class="q16-sum-val" id="proj16c_tahun">Rp 0</span>
+      </div>
+      <div class="q16-sum-row" style="border-bottom:none">
+        <span class="q16-sum-lbl">Rata-rata per bulan</span>
+        <span class="q16-sum-val" id="proj16c_bulan">Rp 0</span>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:8px;background:var(--c-surface3);border-color:var(--c-border2)">
+      <div style="font-size:11px;color:var(--c-text3);font-weight:600;margin-bottom:6px">💡 PANDUAN PETUGAS — Pertanyaan 16.c</div>
+      <ul style="font-size:11px;color:var(--c-text2);padding-left:16px;display:flex;flex-direction:column;gap:4px">
+        <li>Pengeluaran yang <strong style="color:var(--c-text)">tidak rutin bulanan</strong> tapi terjadi dalam setahun terakhir</li>
+        <li>Tidak perlu rutin — beli perabot sekali setahun tetap dihitung</li>
+        <li>Tanyakan tahun terakhir: "Dalam setahun kemarin, apa saja yang dibeli/dibayar selain makanan dan tagihan bulanan?"</li>
+        <li>Jangan dobel-hitung dengan 16.b (yang sudah bulanan)</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ── RINGKASAN TOTAL Q16 ── -->
+  <div class="sec">
+    <div class="slbl">Ringkasan Total Pengeluaran Keluarga Pertahun</div>
+    <div class="q16-analisis" id="analisisBox">
+      <div class="q16-analisis-title">Komposisi Pengeluaran (per tahun)</div>
+      <div id="pieRows"></div>
+    </div>
+    <div class="q16-total-box">
+      <div>
+        <div class="q16-total-lbl">Total Pengeluaran Keluarga / Tahun</div>
+        <div style="font-size:10px;color:var(--c-text3);margin-top:2px">Makanan + Bukan Makanan Bulanan + Bukan Makanan Tahunan</div>
+      </div>
+      <div class="q16-total-val" id="totalQ16">Rp 0</div>
+    </div>
+    <div class="q16-summary" style="margin-top:10px">
+      <div class="q16-sum-title">📋 Rekap Semua Pertanyaan 16</div>
+      <div class="q16-sum-row">
+        <span class="q16-sum-lbl">16.a &nbsp; Makanan per minggu</span>
+        <span class="q16-sum-val" id="sum16a">Rp 0</span>
+      </div>
+      <div class="q16-sum-row">
+        <span class="q16-sum-lbl">16.b &nbsp; Bukan makanan per bulan</span>
+        <span class="q16-sum-val" id="sum16b">Rp 0</span>
+      </div>
+      <div class="q16-sum-row" style="border-bottom:none">
+        <span class="q16-sum-lbl">16.c &nbsp; Bukan makanan per tahun</span>
+        <span class="q16-sum-val" id="sum16c">Rp 0</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="btn-group">
+    <button class="btn-reset" onclick="resetQ16()">↺ &nbsp; Reset Pengeluaran</button>
+    <button class="btn-print" onclick="window.print()" style="background:var(--c-purple)">🖨 &nbsp; Cetak / PDF</button>
+  </div>
+  <div class="page-footer">FASIH SE 2026 — BPS &bull; Blok IV Pengeluaran Rumah Tangga (Q16) &bull; Latihan Petugas</div>
+
+</div><!-- /cont -->
+</div><!-- /pageKeluarga -->
+
+
 <script>
+/* ═══════════════════════════════════════════
+   UTILITIES
+═══════════════════════════════════════════ */
 const fmt=n=>{
+  if(n===0)return'Rp 0';
+  const s=n<0?'-':'';
+  const abs=Math.abs(Math.round(n));
+  if(abs>=1000000){
+    const jt=abs/1000000;
+    if(Number.isInteger(jt))return s+'Rp '+jt.toLocaleString('id-ID')+' jt';
+    if(abs%1000000===0||abs<10000000)return s+'Rp '+(abs/1000000).toFixed(1).replace('.',',')+' jt';
+  }
+  return s+'Rp '+abs.toLocaleString('id-ID');
+};
+const fmtFull=n=>{
   if(n===0)return'Rp 0';
   const s=n<0?'-':'';
   return s+'Rp '+Math.abs(Math.round(n)).toLocaleString('id-ID');
 };
 
+/* ═══════════════════════════════════════════
+   PAGE NAVIGATION
+═══════════════════════════════════════════ */
+function gotoPage(pg){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('aktif'));
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('aktif'));
+  document.getElementById('page'+pg.charAt(0).toUpperCase()+pg.slice(1)).classList.add('aktif');
+  document.getElementById('tab'+pg.charAt(0).toUpperCase()+pg.slice(1)).classList.add('aktif');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+/* ═══════════════════════════════════════════
+   DATA USAHA
+═══════════════════════════════════════════ */
 const DATA={
   pertanian:{
     label:'Pertanian Tanaman Pangan',
     usaha:[
       {id:'padi_inbrida',nm:'Padi inbrida',kbli:'01111',kbliNm:'Pertanian padi sawah',kbliSub:'Kelompok 0111 — Pertanian tanaman serealia',
-       unit:'Luas lahan (hektar)', unitInfo:'Input luas panen/garapan, lalu sistem menyesuaikan estimasi hasil.',
-       unitBox:'Contoh: 1 ha padi inbrida = estimasi produksi 4,5 ton GKP per musim.',
+       unit:'Luas lahan (m²)', unitInfo:'Input luas panen/garapan, sistem menyesuaikan estimasi hasil.',
+       unitBox:'📌 10.000 m² (1 ha) padi inbrida = 4,5 ton GKP/musim × 2 musim = UNTUNG Rp 80 jt/tahun ✅',
        unitType:'luas',baseSize:10000,
-       q26:{a:0,b:6500000,c:500000,d:3500000,e:250000},
-       q27:{a:9000000,b:0},
-       lbl26b:'Benih padi, pupuk urea/NPK, pestisida, sewa traktor, upah panen',
-       lbl27a:'Gabah kering panen (GKP) — estimasi 3,6 ton @ Rp2.500/kg',
-       panen:2,panenLbl:'Dihitung untuk 2x panen dalam 1 tahun (MT1 + MT2)',
+       // Nilai TAHUNAN (2 musim): biaya=34jt, pendapatan=114jt → untung TEPAT 80jt untuk 10.000 m²
+       q26:{a:8000000,b:16000000,c:4000000,d:5000000,e:1000000},
+       q27:{a:114000000,b:0},
+       lbl26b:'Benih padi, pupuk urea/NPK, pestisida, sewa traktor, upah panen (2 musim tanam)',
+       lbl27a:'Gabah kering panen (GKP) — 4,5 ton/musim @ Rp12.600/kg × 2 musim/tahun',
+       panen:2,panenLbl:'✅ 2x panen/tahun (MT1 + MT2) — nilai sudah tahunan → untung Rp 80 jt untuk 10.000 m²',
        masalah:[
-         {id:'harga_turun',ico:'📉',nm:'Harga GKP jatuh saat panen raya',desc:'Harga gabah anjlok di bawah HPP Rp2.000/kg, petani merugi',dampak:'Nilai produksi Q27.a turun drastis; usaha bisa defisit berat',rekomendasi:'Catat harga aktual yang diterima petani, bukan HPP. Beri catatan petugas di kolom keterangan.',adj:{a27:-3000000}},
-         {id:'gagal_panen',ico:'🌧️',nm:'Gagal panen akibat banjir/hama',desc:'Produksi hanya 40% dari normal akibat wereng atau banjir luapan',dampak:'Produksi hanya ~1,4 ton; pendapatan turun 60%',rekomendasi:'Verifikasi dengan bukti penjualan/nota. Tanyakan apakah ada klaim asuransi AUTP.',adj:{a27:-5400000,b27:500000}},
+         {id:'harga_turun',ico:'📉',nm:'Harga GKP jatuh saat panen raya',desc:'Harga gabah anjlok di bawah HPP Rp2.000/kg, petani merugi',dampak:'Nilai produksi Q27.a turun drastis; usaha bisa defisit berat',rekomendasi:'Catat harga aktual yang diterima petani, bukan HPP. Beri catatan petugas di kolom keterangan.',adj:{a27:-25000000}},
+         {id:'gagal_panen',ico:'🌧️',nm:'Gagal panen akibat banjir/hama',desc:'Produksi hanya 40% dari normal akibat wereng atau banjir luapan',dampak:'Produksi hanya ~1,8 ton; pendapatan turun 60%',rekomendasi:'Verifikasi dengan bukti penjualan/nota. Tanyakan apakah ada klaim asuransi AUTP.',adj:{a27:-35000000,b27:500000}},
          {id:'pupuk_langka',ico:'🧪',nm:'Pupuk subsidi langka/tidak tersedia',desc:'Petani terpaksa beli pupuk non-subsidi harga 3x lipat',dampak:'Biaya produksi Q26.b naik signifikan',rekomendasi:'Tanyakan berapa kg pupuk dibeli dan dari mana. Bedakan pupuk subsidi vs non-subsidi.',adj:{b26:4000000}},
          {id:'normal',ico:'✅',nm:'Kondisi normal (tanpa masalah)',desc:'Musim tanam berjalan baik, produksi sesuai estimasi',dampak:'Data sesuai angka referensi baseline',rekomendasi:'Tidak ada penyesuaian khusus.',adj:{}}
        ]},
       {id:'jagung_hibrida',nm:'Jagung hibrida',kbli:'01121',kbliNm:'Pertanian jagung',kbliSub:'Kelompok 0112 — Pertanian tanaman serealia lainnya',
-       unit:'Luas lahan (hektar)', unitInfo:'Input luas tanam jagung dalam hektar.',
-       unitBox:'Contoh: 1 ha jagung hibrida = estimasi produksi 6,5 ton pipil kering per musim.',
+       unit:'Luas lahan (m²)', unitInfo:'Input luas tanam jagung dalam m².',
+       unitBox:'📌 10.000 m² (1 ha) jagung hibrida = estimasi produksi 6,5 ton pipil kering per musim.',
        unitType:'luas',baseSize:10000,
        q26:{a:0,b:5000000,c:300000,d:3000000,e:250000},
        q27:{a:6500000,b:0},
        lbl26b:'Benih jagung hibrida, pupuk, herbisida, sewa alat, upah panen',
        lbl27a:'Jagung pipil kering — estimasi 2,6 ton @ Rp2.500/kg',
-       panen:2,panenLbl:'Dihitung untuk 2x panen/tahun',
+       panen:2,panenLbl:'2x panen per tahun',
        masalah:[
          {id:'harga_turun',ico:'📉',nm:'Harga jagung anjlok',desc:'Harga jagung di bawah Rp2.000/kg akibat oversupply',dampak:'Pendapatan turun ~20–30%',rekomendasi:'Catat harga aktual per kg yang diterima petani di lapangan.',adj:{a27:-2000000}},
          {id:'kemarau',ico:'☀️',nm:'Kemarau panjang, produksi turun',desc:'Lahan kering tidak mendapat cukup hujan, hasil turun 50%',dampak:'Produksi hanya ~1,3 ton per musim',rekomendasi:'Tanyakan luas tanam aktual vs luas yang berhasil panen.',adj:{a27:-3250000}},
          {id:'normal',ico:'✅',nm:'Kondisi normal',desc:'Panen berjalan lancar, harga stabil',dampak:'Data baseline',rekomendasi:'Tidak ada penyesuaian.',adj:{}}
        ]},
       {id:'kedelai',nm:'Kedelai',kbli:'01131',kbliNm:'Pertanian kedelai',kbliSub:'Kelompok 0113 — Pertanian kacang-kacangan',
-       unit:'Luas lahan (hektar)', unitInfo:'Input luas tanam kedelai dalam hektar.',
-       unitBox:'Contoh: 1 ha kedelai = estimasi produksi 1,2 ton kedelai kering per musim.',
+       unit:'Luas lahan (m²)', unitInfo:'Input luas tanam kedelai dalam m².',
+       unitBox:'📌 10.000 m² (1 ha) kedelai = estimasi produksi 1,2 ton kedelai kering per musim.',
        unitType:'luas',baseSize:10000,
        q26:{a:0,b:4000000,c:300000,d:2000000,e:200000},
        q27:{a:7200000,b:0},
@@ -295,8 +1004,8 @@ const DATA={
     label:'Perkebunan',
     usaha:[
       {id:'kopi_rakyat',nm:'Kopi rakyat',kbli:'01271',kbliNm:'Pertanian tanaman kopi',kbliSub:'Kelompok 0127 — Pertanian tanaman untuk bahan minuman',
-       unit:'Luas lahan (hektar)', unitInfo:'Input luas kebun kopi yang menghasilkan (TM).',
-       unitBox:'Contoh: 1 ha kopi rakyat = estimasi produksi 0,8 ton kopi gelondong kering per tahun.',
+       unit:'Luas lahan (m²)', unitInfo:'Input luas kebun kopi yang menghasilkan (TM).',
+       unitBox:'📌 10.000 m² (1 ha) kopi rakyat = estimasi produksi 0,8 ton kopi gelondong kering per tahun.',
        unitType:'luas',baseSize:10000,
        q26:{a:1500000,b:5500000,c:600000,d:1800000,e:200000},
        q27:{a:14000000,b:500000},
@@ -309,28 +1018,28 @@ const DATA={
          {id:'normal',ico:'✅',nm:'Kondisi normal',desc:'Panen dan harga stabil',dampak:'Data baseline',rekomendasi:'Tidak ada penyesuaian.',adj:{}}
        ]},
       {id:'tebu',nm:'Tebu',kbli:'01140',kbliNm:'Pertanian tebu',kbliSub:'Kelompok 0114 — Pertanian tebu',
-       unit:'Luas lahan (hektar)', unitInfo:'Input luas tanam tebu yang akan digiling.',
-       unitBox:'Contoh: 1 ha tebu = estimasi produksi 70-80 ton batang tebu per musim tebang.',
+       unit:'Luas lahan (m²)', unitInfo:'Input luas tanam tebu yang akan digiling.',
+       unitBox:'📌 10.000 m² (1 ha) tebu = estimasi produksi 70–80 ton batang tebu per musim tebang.',
        unitType:'luas',baseSize:10000,
        q26:{a:4000000,b:12000000,c:2000000,d:3000000,e:300000},
        q27:{a:24500000,b:0},
        lbl26b:'Bibit, pupuk, herbisida, sewa traktor olah lahan, tebang-angkut',
        lbl27a:'Tebu giling — estimasi 70 ton @ Rp350.000/ton (bagi hasil gula)',
-       panen:1,panenLbl:'1x tebang per tahun, siklus 10-12 bulan',
+       panen:1,panenLbl:'1x tebang per tahun, siklus 10–12 bulan',
        masalah:[
          {id:'rendemen_rendah',ico:'🧪',nm:'Rendemen gula rendah',desc:'Kualitas tebu turun, rendemen di bawah standar pabrik',dampak:'Bagi hasil dengan pabrik gula berkurang',rekomendasi:'Tanyakan hasil rendemen aktual dari pabrik gula.',adj:{a27:-4500000}},
          {id:'kekeringan',ico:'☀️',nm:'Kekeringan saat masa tumbuh',desc:'Curah hujan kurang, batang tebu kurus dan pendek',dampak:'Tonase panen turun ~30%',rekomendasi:'Cek estimasi tonase hasil tebang dari surat timbang pabrik.',adj:{a27:-7350000}},
          {id:'normal',ico:'✅',nm:'Kondisi normal',desc:'Pertumbuhan dan rendemen baik',dampak:'Data baseline',rekomendasi:'Tidak ada penyesuaian.',adj:{}}
        ]},
       {id:'kelapa',nm:'Kelapa',kbli:'01262',kbliNm:'Pertanian kelapa',kbliSub:'Kelompok 0126 — Pertanian tanaman buah penghasil minyak',
-       unit:'Luas lahan (hektar)', unitInfo:'Input luas kebun kelapa yang menghasilkan.',
-       unitBox:'Contoh: 1 ha kelapa = estimasi 1.000-1.200 butir per bulan.',
+       unit:'Luas lahan (m²)', unitInfo:'Input luas kebun kelapa yang menghasilkan.',
+       unitBox:'📌 10.000 m² (1 ha) kelapa = estimasi 1.000–1.200 butir per bulan.',
        unitType:'luas',baseSize:10000,
        q26:{a:1000000,b:2500000,c:400000,d:1200000,e:150000},
        q27:{a:9000000,b:300000},
        lbl26b:'Pupuk, obat hama kumbang, upah panjat/petik',
-       lbl27a:'Kelapa butir — estimasi 12.000 butir/tahun @ Rp2.500/butir',
-       panen:0,panenLbl:'Panen rutin tiap 1-2 bulan sepanjang tahun',
+       lbl27a:'Kelapa butir — estimasi 12.000 butir/tahun @ Rp750/butir',
+       panen:0,panenLbl:'Panen rutin tiap 1–2 bulan sepanjang tahun',
        masalah:[
          {id:'hama_kumbang',ico:'🐛',nm:'Serangan hama kumbang tanduk',desc:'Pohon kelapa rusak, jumlah buah berkurang',dampak:'Produksi turun dan biaya obat hama naik',rekomendasi:'Tanyakan jumlah pohon terdampak dan biaya pengendalian.',adj:{a27:-2000000,d26:600000}},
          {id:'normal',ico:'✅',nm:'Kondisi normal',desc:'Produksi rutin lancar',dampak:'Data baseline',rekomendasi:'Tidak ada penyesuaian.',adj:{}}
@@ -341,8 +1050,8 @@ const DATA={
     label:'Perikanan',
     usaha:[
       {id:'tambak_udang',nm:'Tambak udang vaname',kbli:'03212',kbliNm:'Budidaya udang air payau',kbliSub:'Kelompok 0321 — Perikanan budidaya air payau',
-       unit:'Luas tambak (hektar)', unitInfo:'Input luas tambak yang aktif dioperasikan per siklus.',
-       unitBox:'Contoh: 1 ha tambak vaname = estimasi panen 3-4 ton per siklus (~100 hari).',
+       unit:'Luas tambak (m²)', unitInfo:'Input luas tambak yang aktif dioperasikan per siklus.',
+       unitBox:'📌 10.000 m² (1 ha) tambak vaname = estimasi panen 3–4 ton per siklus (~100 hari).',
        unitType:'luas',baseSize:10000,
        q26:{a:5000000,b:32000000,c:3000000,d:5000000,e:500000},
        q27:{a:52000000,b:0},
@@ -356,7 +1065,7 @@ const DATA={
        ]},
       {id:'kolam_lele',nm:'Kolam lele',kbli:'03222',kbliNm:'Budidaya lele air tawar',kbliSub:'Kelompok 0322 — Perikanan budidaya air tawar',
        unit:'Luas kolam (m²)', unitInfo:'Input luas kolam terpal/tanah yang digunakan.',
-       unitBox:'Contoh: 100 m² kolam lele = estimasi 1,5 ton per siklus (~75 hari).',
+       unitBox:'📌 100 m² kolam lele = estimasi 1,5 ton per siklus (~75 hari).',
        unitType:'luas',baseSize:100,
        q26:{a:1500000,b:10500000,c:800000,d:1200000,e:150000},
        q27:{a:16500000,b:0},
@@ -375,7 +1084,7 @@ const DATA={
     usaha:[
       {id:'sapi_potong',nm:'Sapi potong',kbli:'01411',kbliNm:'Peternakan sapi potong',kbliSub:'Kelompok 0141 — Peternakan sapi',
        unit:'Jumlah ternak (ekor)', unitInfo:'Input jumlah sapi yang dipelihara atau dijual.',
-       unitBox:'Contoh: 5 ekor sapi potong = estimasi penjualan sesuai bobot dan harga pasar.',
+       unitBox:'📌 5 ekor sapi potong = estimasi penjualan sesuai bobot dan harga pasar.',
        unitType:'ternak',baseSize:5,presets:[2,5,10,20,50],
        q26:{a:6000000,b:24000000,c:2000000,d:4000000,e:500000},
        q27:{a:43800000,b:2000000},
@@ -387,9 +1096,9 @@ const DATA={
          {id:'penyakit',ico:'🏥',nm:'Sapi sakit / PMK',desc:'Ada sapi sakit, pertumbuhan melambat',dampak:'Nilai jual turun dan biaya obat naik',rekomendasi:'Catat jumlah sapi terdampak dan lama sakit.',adj:{a27:-7000000,d26:1500000}},
          {id:'normal',ico:'✅',nm:'Kondisi normal',desc:'Pemeliharaan lancar, harga bagus',dampak:'Data baseline',rekomendasi:'Tidak ada penyesuaian.',adj:{}}
        ]},
-      {id:'ayam_ras',nm:'Ayam ras',kbli:'01461',kbliNm:'Peternakan ayam ras pedaging',kbliSub:'Kelompok 0146 — Peternakan unggas',
+      {id:'ayam_ras',nm:'Ayam ras pedaging',kbli:'01461',kbliNm:'Peternakan ayam ras pedaging',kbliSub:'Kelompok 0146 — Peternakan unggas',
        unit:'Jumlah ternak (ekor)', unitInfo:'Input jumlah ayam ras yang dipelihara per siklus.',
-       unitBox:'Contoh: 1.000 ekor ayam ras = estimasi 3 siklus panen/tahun.',
+       unitBox:'📌 1.000 ekor ayam ras = estimasi 3 siklus panen/tahun.',
        unitType:'ternak',baseSize:1000,presets:[500,1000,2500,5000,10000],
        q26:{a:2000000,b:28000000,c:500000,d:3000000,e:500000},
        q27:{a:36000000,b:0},
@@ -507,11 +1216,15 @@ const DATA={
   }
 };
 
-let sektor='pertanian', usahaId='padi_inbrida', masalahId='normal', selectedSize=null;
+/* ═══════════════════════════════════════════
+   STATE — USAHA
+═══════════════════════════════════════════ */
+let sektor='pertanian',usahaId='padi_inbrida',masalahId='normal',selectedSize=null;
 
 function getUsaha(){return DATA[sektor].usaha.find(u=>u.id===usahaId)||DATA[sektor].usaha[0];}
 function getMasalah(){const u=getUsaha();return u.masalah.find(m=>m.id===masalahId)||u.masalah[0];}
 
+/* ── Render ── */
 function pilihSektor(el){
   document.querySelectorAll('.sector-btn').forEach(b=>b.classList.remove('aktif'));
   el.classList.add('aktif');
@@ -530,16 +1243,16 @@ function pilihUsaha(id){
   renderKBLI();renderMasalah();renderKeuangan();
 }
 
-function pilihUkuran(val){
-  selectedSize=val;
-  document.querySelectorAll('.preset-btn').forEach(b=>b.classList.toggle('aktif',Number(b.dataset.val)===val));
-  renderKeuangan();
-}
-
 function pilihMasalah(id){
   masalahId=id;
   document.querySelectorAll('.masalah-item').forEach(b=>b.classList.toggle('aktif',b.dataset.mid===id));
   renderMasalahAktif();renderKeuangan();
+}
+
+function pilihUkuran(val){
+  selectedSize=val;
+  document.querySelectorAll('.preset-btn').forEach(b=>b.classList.toggle('aktif',Number(b.dataset.val)===val));
+  renderKeuangan();
 }
 
 function renderUsaha(){
@@ -547,32 +1260,36 @@ function renderUsaha(){
   g.innerHTML=DATA[sektor].usaha.map(u=>`<button class="usaha-btn${u.id===usahaId?' aktif':''}" data-uid="${u.id}" onclick="pilihUsaha('${u.id}')"><span class="unm">${u.nm}</span><span class="ukbli">KBLI ${u.kbli}</span></button>`).join('');
 }
 
+const AREA_PRESETS=[1000,2500,5000,8000,10000];
+
 function renderKBLI(){
   const u=getUsaha();
-  document.getElementById('kbliBox').innerHTML=`<div class="sec"><div class="slbl">Kode KBLI</div><div class="kbli-box"><div class="kbli-code">KBLI ${u.kbli}</div><div class="kbli-nm">${u.kbliNm}</div><div class="kbli-sub">${u.kbliSub}</div></div></div>`;
+  document.getElementById('kbliBox').innerHTML=`
+    <div class="slbl">Kode KBLI</div>
+    <div class="kbli-box">
+      <div class="kbli-code-badge">KBLI ${u.kbli}</div>
+      <div><span class="kbli-nm">${u.kbliNm}</span><span class="kbli-sub">${u.kbliSub}</span></div>
+    </div>`;
   document.getElementById('unitLabel').textContent=u.unit||'—';
   document.getElementById('unitInfo').textContent=u.unitInfo||'—';
   document.getElementById('unitBox').textContent=u.unitBox||'—';
   renderPreset();
 }
 
-const AREA_PRESETS=[1000,2500,5000,8000,10000];
-
 function renderPreset(){
   const u=getUsaha();
   const wrap=document.getElementById('presetWrap');
   if(u.unitType==='luas'){
     if(!selectedSize)selectedSize=u.baseSize;
-    wrap.innerHTML='<div class="preset-lbl">📐 Klik untuk isi otomatis luas (m²):</div><div class="preset-grid">'+
+    wrap.innerHTML='<div class="preset-lbl">📐 Klik preset luas:</div><div class="preset-grid">'+
       AREA_PRESETS.map(v=>`<button class="preset-btn${v===selectedSize?' aktif':''}" data-val="${v}" onclick="pilihUkuran(${v})">${v.toLocaleString('id-ID')} m²</button>`).join('')+'</div>';
-  } else if(u.unitType==='ternak'){
+  }else if(u.unitType==='ternak'){
     if(!selectedSize)selectedSize=u.baseSize;
     const presets=u.presets||[u.baseSize];
-    wrap.innerHTML='<div class="preset-lbl">🐄 Klik untuk isi otomatis jumlah (ekor):</div><div class="preset-grid">'+
+    wrap.innerHTML='<div class="preset-lbl">🐄 Klik preset jumlah:</div><div class="preset-grid">'+
       presets.map(v=>`<button class="preset-btn${v===selectedSize?' aktif':''}" data-val="${v}" onclick="pilihUkuran(${v})">${v.toLocaleString('id-ID')} ekor</button>`).join('')+'</div>';
-  } else {
-    selectedSize=null;
-    wrap.innerHTML='';
+  }else{
+    selectedSize=null;wrap.innerHTML='';
   }
 }
 
@@ -586,7 +1303,7 @@ function renderMasalahAktif(){
   const m=getMasalah();
   const box=document.getElementById('masalahAktifBox');
   if(m.id==='normal'){box.innerHTML='';return;}
-  box.innerHTML=`<div class="masalah-aktif-box"><div class="mab-title">&#128204; Dampak pada data survei:</div><div class="mab-dampak">${m.dampak}</div><div class="mab-rek"><strong>Rekomendasi petugas:</strong> ${m.rekomendasi}</div></div>`;
+  box.innerHTML=`<div class="masalah-aktif-box"><div class="mab-title">📌 Dampak pada data survei</div><div class="mab-dampak">${m.dampak}</div><div class="mab-rek"><strong>Rekomendasi petugas:</strong> ${m.rekomendasi}</div></div>`;
 }
 
 function renderKeuangan(){
@@ -605,54 +1322,43 @@ function renderKeuangan(){
   const c27=a27+b27;
   const selisih=c27-f26;
 
-  document.getElementById('p26a').textContent=fmt(a26);
-  document.getElementById('p26b').textContent=fmt(b26);
-  document.getElementById('p26c').textContent=fmt(c26);
-  document.getElementById('p26d').textContent=fmt(d26);
-  document.getElementById('p26e').textContent=fmt(e26);
-  document.getElementById('p26f').textContent=fmt(f26);
+  document.getElementById('p26a').textContent=fmtFull(a26);
+  document.getElementById('p26b').textContent=fmtFull(b26);
+  document.getElementById('p26c').textContent=fmtFull(c26);
+  document.getElementById('p26d').textContent=fmtFull(d26);
+  document.getElementById('p26e').textContent=fmtFull(e26);
+  document.getElementById('p26f').textContent=fmtFull(f26);
   document.getElementById('lbl26b').textContent=u.lbl26b;
   document.getElementById('lbl27a').textContent=u.lbl27a;
-  document.getElementById('p27a').textContent=fmt(a27);
-  document.getElementById('p27b').textContent=fmt(b27);
-  document.getElementById('p27c').textContent=fmt(c27);
-  document.getElementById('rPend').textContent=fmt(c27);
-  document.getElementById('rPendNote').textContent='Nilai produksi/penjualan '+u.nm+' tahun 2025'+(scale!==1?' (skala '+(scale<1?(scale*100).toFixed(0)+'%':scale.toFixed(2)+'x')+' dari baseline)':'');
-  document.getElementById('rPeng').textContent=fmt(f26);
-  document.getElementById('rSelisih').textContent=fmt(selisih);
+  document.getElementById('p27a').textContent=fmtFull(a27);
+  document.getElementById('p27b').textContent=fmtFull(b27);
+  document.getElementById('p27c').textContent=fmtFull(c27);
+  document.getElementById('rPend').textContent=fmtFull(c27);
+  document.getElementById('rPendNote').textContent='Nilai produksi/penjualan '+u.nm+' tahun 2025'+(scale!==1?' (skala '+(selectedSize>=1000?(selectedSize/10000).toFixed(1)+' ha':selectedSize.toLocaleString('id-ID')+' m²/ekor')+')':'');
+  document.getElementById('rPeng').textContent=fmtFull(f26);
 
   const pi=document.getElementById('panenInfo');
   if(u.panenLbl){pi.style.display='block';pi.textContent='📅 '+u.panenLbl;}else{pi.style.display='none';}
 
-  const hbs=document.getElementById('hboxSelisih');
-  const hbk=document.getElementById('hboxKesimpulan');
-  const rSel=document.getElementById('rSelisih');
-  const rKes=document.getElementById('rKes');
-  const rKesNote=document.getElementById('rKesNote');
-  const rKesTitle=document.getElementById('hbKesTitle');
+  const wrap=document.getElementById('wrapSelisih');
+  const rSelisih=document.getElementById('rSelisih');
   const rStatus=document.getElementById('rStatus');
+  const rKesNote=document.getElementById('rKesNote');
+
+  rSelisih.textContent=fmtFull(selisih);
 
   if(selisih>0){
-    hbs.className='hbox';hbs.style.cssText='border-radius:10px;padding:11px 15px;margin-top:10px;background:#EAF3DE;border:1.5px solid #3B6D11';
-    hbk.style.cssText='border-radius:10px;padding:11px 15px;margin-top:8px;background:#EAF3DE;border:1.5px solid #3B6D11';
-    rSel.style.color='#155724';rKesTitle.style.color='#27500A';rKes.style.color='#155724';rKes.style.fontSize='20px';
-    rStatus.innerHTML='<span class="badge b-surplus">👍 Surplus</span> &nbsp;Pendapatan lebih besar dari pengeluaran';
-    rKes.textContent='Surplus '+fmt(selisih)+' / tahun';
-    rKesNote.innerHTML=fmt(c27)+' − '+fmt(f26)+' = <strong style="color:#155724">+'+fmt(selisih)+'</strong><br><span class="badge b-surplus" style="margin-top:4px">👍 Usaha '+u.nm+' sehat & menguntungkan</span>';
-  } else if(selisih<0){
-    hbs.style.cssText='border-radius:10px;padding:11px 15px;margin-top:10px;background:#FCEBEB;border:1.5px solid #A32D2D';
-    hbk.style.cssText='border-radius:10px;padding:11px 15px;margin-top:8px;background:#FCEBEB;border:1.5px solid #A32D2D';
-    rSel.style.color='#721C24';rKesTitle.style.color='#A32D2D';rKes.style.color='#721C24';rKes.style.fontSize='20px';
-    rStatus.innerHTML='<span class="badge b-defisit">⚠ Defisit</span> &nbsp;Pengeluaran melebihi pendapatan';
-    rKes.textContent='Defisit '+fmt(selisih)+' / tahun';
-    rKesNote.innerHTML=fmt(c27)+' − '+fmt(f26)+' = <strong style="color:#721C24">'+fmt(selisih)+'</strong><br><span class="badge b-defisit" style="margin-top:4px">⚠ Usaha '+u.nm+' merugi, perlu efisiensi</span>';
-  } else {
-    hbs.style.cssText='border-radius:10px;padding:11px 15px;margin-top:10px;background:#E2E3E5;border:1.5px solid #5F5E5A';
-    hbk.style.cssText='border-radius:10px;padding:11px 15px;margin-top:8px;background:#E2E3E5;border:1.5px solid #5F5E5A';
-    rSel.style.color='#383D41';rKesTitle.style.color='#383D41';rKes.style.color='#383D41';rKes.style.fontSize='20px';
-    rStatus.innerHTML='<span class="badge b-neutral">• Impas</span> &nbsp;Pendapatan sama dengan pengeluaran';
-    rKes.textContent='Impas / Break Even';
-    rKesNote.innerHTML='Pendapatan = Pengeluaran = '+fmt(f26);
+    wrap.className='selisih-surplus';
+    rStatus.innerHTML='<span class="badge badge-green">👍 Surplus</span> &nbsp; Pendapatan lebih besar dari pengeluaran';
+    rKesNote.innerHTML=`${fmtFull(c27)} − ${fmtFull(f26)} = <strong style="color:var(--c-green)">+${fmtFull(selisih)}</strong> &nbsp; <span class="badge badge-green">Usaha ${u.nm} sehat &amp; menguntungkan</span>`;
+  }else if(selisih<0){
+    wrap.className='selisih-defisit';
+    rStatus.innerHTML='<span class="badge badge-red">⚠ Defisit</span> &nbsp; Pengeluaran melebihi pendapatan';
+    rKesNote.innerHTML=`${fmtFull(c27)} − ${fmtFull(f26)} = <strong style="color:var(--c-red)">${fmtFull(selisih)}</strong> &nbsp; <span class="badge badge-red">Usaha ${u.nm} merugi</span>`;
+  }else{
+    wrap.className='selisih-impas';
+    rStatus.innerHTML='<span class="badge badge-gray">• Impas</span> &nbsp; Pendapatan sama dengan pengeluaran';
+    rKesNote.innerHTML='Pendapatan = Pengeluaran = '+fmtFull(f26);
   }
 }
 
@@ -663,9 +1369,108 @@ function resetAll(){
   renderUsaha();renderKBLI();renderMasalah();renderKeuangan();
 }
 
+/* ═══════════════════════════════════════════
+   Q16 — PENGELUARAN KELUARGA
+═══════════════════════════════════════════ */
+let q16={a:0,b:0,c:0};
+
+function pilihKat(kat){
+  document.querySelectorAll('.q16-kat').forEach((el,i)=>{
+    const ids=['makanan','bukan_bulanan','bukan_tahunan'];
+    el.classList.toggle('aktif',ids[i]===kat);
+  });
+  document.querySelectorAll('.q16-panel').forEach(p=>p.classList.remove('aktif'));
+  document.getElementById('panel-'+kat).classList.add('aktif');
+}
+
+function updateQ16(key,val){
+  q16[key]=Number(val);
+  renderQ16();
+}
+
+function setQ16(key,val){
+  q16[key]=val;
+  document.getElementById('range16'+key).value=val;
+  // Update chip aktif
+  const chips=document.querySelectorAll(`#quick16${key} .q16-chip`);
+  chips.forEach(c=>{
+    const chipVal=parseInt(c.getAttribute('onclick').match(/\d+/)[0]);
+    c.classList.toggle('aktif',chipVal===val);
+  });
+  renderQ16();
+}
+
+function renderQ16(){
+  const a=q16.a, b=q16.b, c=q16.c;
+  // Display amounts
+  document.getElementById('disp16a').textContent=fmtFull(a);
+  document.getElementById('disp16b').textContent=fmtFull(b);
+  document.getElementById('disp16c').textContent=fmtFull(c);
+  // Proyeksi 16.a
+  document.getElementById('proj16a_minggu').textContent=fmtFull(a);
+  document.getElementById('proj16a_bulan').textContent=fmtFull(Math.round(a*4.3));
+  document.getElementById('proj16a_tahun').textContent=fmtFull(a*52);
+  // Proyeksi 16.b
+  document.getElementById('proj16b_bulan').textContent=fmtFull(b);
+  document.getElementById('proj16b_tahun').textContent=fmtFull(b*12);
+  // Proyeksi 16.c
+  document.getElementById('proj16c_tahun').textContent=fmtFull(c);
+  document.getElementById('proj16c_bulan').textContent=fmtFull(Math.round(c/12));
+  // Rekap
+  document.getElementById('sum16a').textContent=fmtFull(a)+' /minggu';
+  document.getElementById('sum16b').textContent=fmtFull(b)+' /bulan';
+  document.getElementById('sum16c').textContent=fmtFull(c)+' /tahun';
+  // Total per tahun
+  const totalTahun=(a*52)+(b*12)+c;
+  document.getElementById('totalQ16').textContent=fmtFull(totalTahun);
+  // Analisis komposisi
+  renderPie(a*52, b*12, c, totalTahun);
+}
+
+function renderPie(makanan,bulanNonFood,tahunNonFood,total){
+  const rows=document.getElementById('pieRows');
+  if(total===0){rows.innerHTML='<div style="font-size:12px;color:var(--c-text3);text-align:center;padding:16px">Masukkan data pengeluaran untuk melihat komposisi</div>';return;}
+  const items=[
+    {lbl:'Makanan (16.a × 52)',val:makanan,color:'var(--c-purple)'},
+    {lbl:'Bukan Makanan Bulanan (16.b × 12)',val:bulanNonFood,color:'var(--c-amber)'},
+    {lbl:'Bukan Makanan Tahunan (16.c)',val:tahunNonFood,color:'var(--c-blue)'},
+  ];
+  rows.innerHTML=items.map(it=>{
+    const pct=total>0?((it.val/total)*100).toFixed(1):0;
+    const w=total>0?(it.val/total)*100:0;
+    return`<div class="q16-pie-row">
+      <div style="width:90px;flex-shrink:0;font-size:10px;color:var(--c-text3)">${it.lbl}</div>
+      <div style="flex:1;background:var(--c-surface3);border-radius:4px;height:8px;overflow:hidden">
+        <div class="q16-pie-bar" style="width:${w}%;background:${it.color};height:100%"></div>
+      </div>
+      <div class="q16-pie-pct" style="color:${it.color}">${pct}%</div>
+    </div>`;
+  }).join('');
+}
+
+function showTip(txt){
+  const box=document.getElementById('tipBox');
+  if(box.style.display==='none'||box.textContent!==txt){
+    box.textContent=txt;box.style.display='block';
+  }else{box.style.display='none';}
+}
+
+function resetQ16(){
+  q16={a:0,b:0,c:0};
+  ['a','b','c'].forEach(k=>{
+    document.getElementById('range16'+k).value=0;
+    document.querySelectorAll(`#quick16${k} .q16-chip`).forEach(c=>c.classList.remove('aktif'));
+  });
+  renderQ16();
+}
+
+/* ═══════════════════════════════════════════
+   INIT
+═══════════════════════════════════════════ */
 window.addEventListener('load',()=>{
   selectedSize=getUsaha().baseSize||null;
   renderUsaha();renderKBLI();renderMasalah();renderKeuangan();
+  renderQ16();
 });
 </script>
 </body>
