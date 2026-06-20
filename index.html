@@ -28,6 +28,13 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--
 .flbl strong{color:var(--text);font-weight:600;display:block;margin-bottom:2px}
 .info-box{background:#FFF8E7;border:1px solid #EF9F27;border-radius:var(--radius-sm);padding:10px 12px;margin-top:8px;font-size:12px;color:#854F0B}
 
+/* Preset ukuran */
+.preset-lbl{font-size:11px;font-weight:700;color:var(--text-muted);margin-bottom:6px}
+.preset-grid{display:flex;flex-wrap:wrap;gap:6px}
+.preset-btn{padding:8px 12px;border:1.5px solid var(--border);border-radius:20px;background:var(--surface);cursor:pointer;font-family:inherit;font-size:12px;font-weight:700;color:var(--text);transition:all .15s}
+.preset-btn:hover{border-color:var(--blue-mid);background:var(--blue-light)}
+.preset-btn.aktif{border-color:var(--blue);background:var(--blue);color:#fff}
+
 /* Sektor grid */
 .sector-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:7px}
 .sector-btn{padding:10px 6px;border:1.5px solid var(--border);border-radius:var(--radius);background:var(--surface);cursor:pointer;text-align:center;font-family:inherit;transition:all .15s}
@@ -164,6 +171,7 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--
     <div class="card">
       <div class="flbl"><strong id="unitLabel">—</strong><span id="unitInfo">—</span></div>
       <div class="info-box" id="unitBox">—</div>
+      <div id="presetWrap" style="margin-top:10px"></div>
     </div>
   </div>
 
@@ -242,6 +250,7 @@ const DATA={
       {id:'padi_inbrida',nm:'Padi inbrida',kbli:'01111',kbliNm:'Pertanian padi sawah',kbliSub:'Kelompok 0111 — Pertanian tanaman serealia',
        unit:'Luas lahan (hektar)', unitInfo:'Input luas panen/garapan, lalu sistem menyesuaikan estimasi hasil.',
        unitBox:'Contoh: 1 ha padi inbrida = estimasi produksi 4,5 ton GKP per musim.',
+       unitType:'luas',baseSize:10000,
        q26:{a:0,b:6500000,c:500000,d:3500000,e:250000},
        q27:{a:9000000,b:0},
        lbl26b:'Benih padi, pupuk urea/NPK, pestisida, sewa traktor, upah panen',
@@ -256,6 +265,7 @@ const DATA={
       {id:'jagung_hibrida',nm:'Jagung hibrida',kbli:'01121',kbliNm:'Pertanian jagung',kbliSub:'Kelompok 0112 — Pertanian tanaman serealia lainnya',
        unit:'Luas lahan (hektar)', unitInfo:'Input luas tanam jagung dalam hektar.',
        unitBox:'Contoh: 1 ha jagung hibrida = estimasi produksi 6,5 ton pipil kering per musim.',
+       unitType:'luas',baseSize:10000,
        q26:{a:0,b:5000000,c:300000,d:3000000,e:250000},
        q27:{a:6500000,b:0},
        lbl26b:'Benih jagung hibrida, pupuk, herbisida, sewa alat, upah panen',
@@ -267,6 +277,9 @@ const DATA={
          {id:'normal',ico:'✅',nm:'Kondisi normal',desc:'Panen berjalan lancar, harga stabil',dampak:'Data baseline',rekomendasi:'Tidak ada penyesuaian.',adj:{}}
        ]},
       {id:'kedelai',nm:'Kedelai',kbli:'01131',kbliNm:'Pertanian kedelai',kbliSub:'Kelompok 0113 — Pertanian kacang-kacangan',
+       unit:'Luas lahan (hektar)', unitInfo:'Input luas tanam kedelai dalam hektar.',
+       unitBox:'Contoh: 1 ha kedelai = estimasi produksi 1,2 ton kedelai kering per musim.',
+       unitType:'luas',baseSize:10000,
        q26:{a:0,b:4000000,c:300000,d:2000000,e:200000},
        q27:{a:7200000,b:0},
        lbl26b:'Benih kedelai, pupuk, rhizobium, pestisida',
@@ -278,12 +291,92 @@ const DATA={
        ]}
     ]
   },
+  perkebunan:{
+    label:'Perkebunan',
+    usaha:[
+      {id:'kopi_rakyat',nm:'Kopi rakyat',kbli:'01271',kbliNm:'Pertanian tanaman kopi',kbliSub:'Kelompok 0127 — Pertanian tanaman untuk bahan minuman',
+       unit:'Luas lahan (hektar)', unitInfo:'Input luas kebun kopi yang menghasilkan (TM).',
+       unitBox:'Contoh: 1 ha kopi rakyat = estimasi produksi 0,8 ton kopi gelondong kering per tahun.',
+       unitType:'luas',baseSize:10000,
+       q26:{a:1500000,b:5500000,c:600000,d:1800000,e:200000},
+       q27:{a:14000000,b:500000},
+       lbl26b:'Pupuk kandang/NPK, fungisida, bibit sulaman, upah petik',
+       lbl27a:'Kopi gelondong kering — estimasi 0,8 ton @ Rp17.500/kg',
+       panen:1,panenLbl:'1x musim petik raya per tahun (Mei–Agustus)',
+       masalah:[
+         {id:'harga_anjlok',ico:'📉',nm:'Harga kopi dunia turun',desc:'Harga kopi gelondong di bawah Rp15.000/kg akibat harga pasar global turun',dampak:'Nilai produksi Q27.a turun signifikan',rekomendasi:'Catat harga jual aktual ke pengepul/koperasi setempat.',adj:{a27:-2000000}},
+         {id:'gagal_bunga',ico:'🌸',nm:'Bunga kopi gagal jadi buah',desc:'Cuaca tidak menentu saat masa pembungaan, buah sedikit',dampak:'Produksi turun hingga 40%',rekomendasi:'Tanyakan estimasi hasil panen dibanding tahun normal.',adj:{a27:-5600000}},
+         {id:'normal',ico:'✅',nm:'Kondisi normal',desc:'Panen dan harga stabil',dampak:'Data baseline',rekomendasi:'Tidak ada penyesuaian.',adj:{}}
+       ]},
+      {id:'tebu',nm:'Tebu',kbli:'01140',kbliNm:'Pertanian tebu',kbliSub:'Kelompok 0114 — Pertanian tebu',
+       unit:'Luas lahan (hektar)', unitInfo:'Input luas tanam tebu yang akan digiling.',
+       unitBox:'Contoh: 1 ha tebu = estimasi produksi 70-80 ton batang tebu per musim tebang.',
+       unitType:'luas',baseSize:10000,
+       q26:{a:4000000,b:12000000,c:2000000,d:3000000,e:300000},
+       q27:{a:24500000,b:0},
+       lbl26b:'Bibit, pupuk, herbisida, sewa traktor olah lahan, tebang-angkut',
+       lbl27a:'Tebu giling — estimasi 70 ton @ Rp350.000/ton (bagi hasil gula)',
+       panen:1,panenLbl:'1x tebang per tahun, siklus 10-12 bulan',
+       masalah:[
+         {id:'rendemen_rendah',ico:'🧪',nm:'Rendemen gula rendah',desc:'Kualitas tebu turun, rendemen di bawah standar pabrik',dampak:'Bagi hasil dengan pabrik gula berkurang',rekomendasi:'Tanyakan hasil rendemen aktual dari pabrik gula.',adj:{a27:-4500000}},
+         {id:'kekeringan',ico:'☀️',nm:'Kekeringan saat masa tumbuh',desc:'Curah hujan kurang, batang tebu kurus dan pendek',dampak:'Tonase panen turun ~30%',rekomendasi:'Cek estimasi tonase hasil tebang dari surat timbang pabrik.',adj:{a27:-7350000}},
+         {id:'normal',ico:'✅',nm:'Kondisi normal',desc:'Pertumbuhan dan rendemen baik',dampak:'Data baseline',rekomendasi:'Tidak ada penyesuaian.',adj:{}}
+       ]},
+      {id:'kelapa',nm:'Kelapa',kbli:'01262',kbliNm:'Pertanian kelapa',kbliSub:'Kelompok 0126 — Pertanian tanaman buah penghasil minyak',
+       unit:'Luas lahan (hektar)', unitInfo:'Input luas kebun kelapa yang menghasilkan.',
+       unitBox:'Contoh: 1 ha kelapa = estimasi 1.000-1.200 butir per bulan.',
+       unitType:'luas',baseSize:10000,
+       q26:{a:1000000,b:2500000,c:400000,d:1200000,e:150000},
+       q27:{a:9000000,b:300000},
+       lbl26b:'Pupuk, obat hama kumbang, upah panjat/petik',
+       lbl27a:'Kelapa butir — estimasi 12.000 butir/tahun @ Rp2.500/butir',
+       panen:0,panenLbl:'Panen rutin tiap 1-2 bulan sepanjang tahun',
+       masalah:[
+         {id:'hama_kumbang',ico:'🐛',nm:'Serangan hama kumbang tanduk',desc:'Pohon kelapa rusak, jumlah buah berkurang',dampak:'Produksi turun dan biaya obat hama naik',rekomendasi:'Tanyakan jumlah pohon terdampak dan biaya pengendalian.',adj:{a27:-2000000,d26:600000}},
+         {id:'normal',ico:'✅',nm:'Kondisi normal',desc:'Produksi rutin lancar',dampak:'Data baseline',rekomendasi:'Tidak ada penyesuaian.',adj:{}}
+       ]}
+    ]
+  },
+  perikanan:{
+    label:'Perikanan',
+    usaha:[
+      {id:'tambak_udang',nm:'Tambak udang vaname',kbli:'03212',kbliNm:'Budidaya udang air payau',kbliSub:'Kelompok 0321 — Perikanan budidaya air payau',
+       unit:'Luas tambak (hektar)', unitInfo:'Input luas tambak yang aktif dioperasikan per siklus.',
+       unitBox:'Contoh: 1 ha tambak vaname = estimasi panen 3-4 ton per siklus (~100 hari).',
+       unitType:'luas',baseSize:10000,
+       q26:{a:5000000,b:32000000,c:3000000,d:5000000,e:500000},
+       q27:{a:52000000,b:0},
+       lbl26b:'Benur, pakan pelet, kapur, probiotik, listrik kincir',
+       lbl27a:'Udang vaname segar — estimasi 3,2 ton @ Rp65.000/kg (size 60)',
+       panen:2,panenLbl:'2x siklus tebar-panen per tahun',
+       masalah:[
+         {id:'penyakit_udang',ico:'🦠',nm:'Serangan penyakit (white spot/AHPND)',desc:'Udang mati massal sebelum masa panen',dampak:'Gagal panen sebagian/seluruhnya, kerugian besar',rekomendasi:'Tanyakan persentase kematian dan apakah ada panen parsial.',adj:{a27:-26000000}},
+         {id:'harga_anjlok',ico:'📉',nm:'Harga udang turun saat panen',desc:'Harga di bawah Rp55.000/kg akibat oversupply pasar',dampak:'Pendapatan turun meski produksi normal',rekomendasi:'Catat harga jual aktual ke pengepul/eksportir.',adj:{a27:-6400000}},
+         {id:'normal',ico:'✅',nm:'Kondisi normal',desc:'Survival rate baik, harga stabil',dampak:'Data baseline',rekomendasi:'Tidak ada penyesuaian.',adj:{}}
+       ]},
+      {id:'kolam_lele',nm:'Kolam lele',kbli:'03222',kbliNm:'Budidaya lele air tawar',kbliSub:'Kelompok 0322 — Perikanan budidaya air tawar',
+       unit:'Luas kolam (m²)', unitInfo:'Input luas kolam terpal/tanah yang digunakan.',
+       unitBox:'Contoh: 100 m² kolam lele = estimasi 1,5 ton per siklus (~75 hari).',
+       unitType:'luas',baseSize:100,
+       q26:{a:1500000,b:10500000,c:800000,d:1200000,e:150000},
+       q27:{a:16500000,b:0},
+       lbl26b:'Bibit lele, pakan pelet apung, probiotik, kapur tohor',
+       lbl27a:'Lele konsumsi — estimasi 1,5 ton @ Rp11.000/kg',
+       panen:3,panenLbl:'3x siklus tebar-panen per tahun',
+       masalah:[
+         {id:'pakan_naik',ico:'💰',nm:'Harga pakan pelet naik',desc:'Harga pelet naik dari Rp11.000 menjadi Rp13.500/kg',dampak:'Biaya produksi Q26.b naik signifikan',rekomendasi:'Tanyakan jumlah karung pakan dan harga beli aktual.',adj:{b26:2500000}},
+         {id:'kualitas_air',ico:'💧',nm:'Kualitas air buruk, kematian tinggi',desc:'Air kolam keruh/tercemar, banyak lele mati',dampak:'Hasil panen turun ~35%',rekomendasi:'Tanyakan estimasi jumlah lele yang mati dan sisa panen.',adj:{a27:-5775000}},
+         {id:'normal',ico:'✅',nm:'Kondisi normal',desc:'Pertumbuhan dan panen lancar',dampak:'Data baseline',rekomendasi:'Tidak ada penyesuaian.',adj:{}}
+       ]}
+    ]
+  },
   peternakan:{
     label:'Peternakan',
     usaha:[
       {id:'sapi_potong',nm:'Sapi potong',kbli:'01411',kbliNm:'Peternakan sapi potong',kbliSub:'Kelompok 0141 — Peternakan sapi',
        unit:'Jumlah ternak (ekor)', unitInfo:'Input jumlah sapi yang dipelihara atau dijual.',
        unitBox:'Contoh: 5 ekor sapi potong = estimasi penjualan sesuai bobot dan harga pasar.',
+       unitType:'ternak',baseSize:5,presets:[2,5,10,20,50],
        q26:{a:6000000,b:24000000,c:2000000,d:4000000,e:500000},
        q27:{a:43800000,b:2000000},
        lbl26b:'Konsentrat, hijauan, vitamin, IB, obat cacing, listrik kandang',
@@ -297,6 +390,7 @@ const DATA={
       {id:'ayam_ras',nm:'Ayam ras',kbli:'01461',kbliNm:'Peternakan ayam ras pedaging',kbliSub:'Kelompok 0146 — Peternakan unggas',
        unit:'Jumlah ternak (ekor)', unitInfo:'Input jumlah ayam ras yang dipelihara per siklus.',
        unitBox:'Contoh: 1.000 ekor ayam ras = estimasi 3 siklus panen/tahun.',
+       unitType:'ternak',baseSize:1000,presets:[500,1000,2500,5000,10000],
        q26:{a:2000000,b:28000000,c:500000,d:3000000,e:500000},
        q27:{a:36000000,b:0},
        lbl26b:'DOC (bibit), pakan konsentrat, vaksin, obat, sekam kandang',
@@ -334,10 +428,86 @@ const DATA={
          {id:'normal',ico:'✅',nm:'Kondisi normal',desc:'Order lancar',dampak:'Data baseline',rekomendasi:'Tidak ada penyesuaian.',adj:{}}
        ]}
     ]
+  },
+  perdagangan:{
+    label:'Perdagangan',
+    usaha:[
+      {id:'warung_kelontong',nm:'Warung kelontong',kbli:'47111',kbliNm:'Perdagangan eceran kelontong',kbliSub:'Kelompok 4711 — Perdagangan eceran berbagai macam barang',
+       q26:{a:3000000,b:55000000,c:1000000,d:2400000,e:200000},
+       q27:{a:68000000,b:500000},
+       lbl26b:'Pembelian barang dagangan (sembako, rokok, kebutuhan harian)',
+       lbl27a:'Penjualan barang dagangan eceran sepanjang tahun',
+       panen:0,panenLbl:'Operasional harian sepanjang tahun',
+       masalah:[
+         {id:'sepi_pembeli',ico:'📉',nm:'Sepi pembeli, kalah saing minimarket',desc:'Omzet turun karena banyak minimarket modern di sekitar',dampak:'Penjualan turun ~20%',rekomendasi:'Tanyakan omzet rata-rata per bulan dibanding tahun lalu.',adj:{a27:-13600000}},
+         {id:'normal',ico:'✅',nm:'Kondisi normal',desc:'Penjualan stabil',dampak:'Data baseline',rekomendasi:'Tidak ada penyesuaian.',adj:{}}
+       ]},
+      {id:'toko_bangunan',nm:'Toko material bangunan',kbli:'47524',kbliNm:'Perdagangan eceran bahan bangunan',kbliSub:'Kelompok 4752 — Perdagangan eceran perangkat keras',
+       q26:{a:9000000,b:120000000,c:3000000,d:6000000,e:600000},
+       q27:{a:148000000,b:1000000},
+       lbl26b:'Pembelian semen, besi, cat, pasir, dan material bangunan lain',
+       lbl27a:'Penjualan material bangunan eceran/grosir',
+       panen:0,panenLbl:'Operasional sepanjang tahun, tergantung proyek pembangunan',
+       masalah:[
+         {id:'piutang_macet',ico:'💳',nm:'Banyak piutang/pembayaran tertunda',desc:'Pelanggan proyek menunggak pembayaran',dampak:'Arus kas terganggu, omzet tercatat tapi belum diterima',rekomendasi:'Tanyakan nilai penjualan yang sudah diterima tunai vs masih piutang.',adj:{a27:-10000000}},
+         {id:'normal',ico:'✅',nm:'Kondisi normal',desc:'Penjualan dan pembayaran lancar',dampak:'Data baseline',rekomendasi:'Tidak ada penyesuaian.',adj:{}}
+       ]}
+    ]
+  },
+  industri:{
+    label:'Industri',
+    usaha:[
+      {id:'tahu_tempe',nm:'Industri tahu/tempe',kbli:'10394',kbliNm:'Industri pengolahan kedelai',kbliSub:'Kelompok 1039 — Industri pengolahan dan pengawetan lainnya',
+       q26:{a:9000000,b:40000000,c:1500000,d:4500000,e:300000},
+       q27:{a:58000000,b:0},
+       lbl26b:'Kedelai, ragi tempe, kayu bakar/gas, plastik kemasan',
+       lbl27a:'Penjualan tahu dan tempe produksi harian',
+       panen:0,panenLbl:'Produksi harian sepanjang tahun',
+       masalah:[
+         {id:'harga_kedelai',ico:'💰',nm:'Harga kedelai impor naik',desc:'Harga bahan baku kedelai naik akibat kurs dan impor',dampak:'Biaya produksi Q26.b naik signifikan',rekomendasi:'Tanyakan harga beli kedelai aktual per kg saat ini.',adj:{b26:6000000}},
+         {id:'normal',ico:'✅',nm:'Kondisi normal',desc:'Produksi dan penjualan stabil',dampak:'Data baseline',rekomendasi:'Tidak ada penyesuaian.',adj:{}}
+       ]},
+      {id:'kerupuk_keripik',nm:'Industri kerupuk/keripik',kbli:'10792',kbliNm:'Industri makanan ringan',kbliSub:'Kelompok 1079 — Industri produk makanan lainnya',
+       q26:{a:6000000,b:22000000,c:1000000,d:3000000,e:200000},
+       q27:{a:36000000,b:500000},
+       lbl26b:'Tepung, minyak goreng, bumbu, kemasan plastik',
+       lbl27a:'Penjualan kerupuk/keripik ke warung dan pasar',
+       panen:0,panenLbl:'Produksi rutin sepanjang tahun',
+       masalah:[
+         {id:'minyak_naik',ico:'🛢️',nm:'Harga minyak goreng naik',desc:'Biaya minyak goreng untuk produksi naik signifikan',dampak:'Margin usaha menipis',rekomendasi:'Tanyakan harga beli minyak goreng aktual per liter/kg.',adj:{b26:4000000}},
+         {id:'normal',ico:'✅',nm:'Kondisi normal',desc:'Produksi dan penjualan lancar',dampak:'Data baseline',rekomendasi:'Tidak ada penyesuaian.',adj:{}}
+       ]}
+    ]
+  },
+  kuliner:{
+    label:'Kuliner',
+    usaha:[
+      {id:'warung_makan',nm:'Warung makan',kbli:'56101',kbliNm:'Restoran/rumah makan',kbliSub:'Kelompok 5610 — Restoran dan penyediaan makanan keliling',
+       q26:{a:9000000,b:48000000,c:2000000,d:4800000,e:300000},
+       q27:{a:72000000,b:0},
+       lbl26b:'Bahan baku masakan (beras, sayur, daging, bumbu)',
+       lbl27a:'Penjualan makanan dan minuman harian',
+       panen:0,panenLbl:'Operasional harian sepanjang tahun',
+       masalah:[
+         {id:'bahan_naik',ico:'💰',nm:'Harga bahan pokok naik',desc:'Harga daging, sayur, dan minyak naik signifikan',dampak:'Biaya produksi Q26.b naik, margin tertekan',rekomendasi:'Tanyakan rata-rata kenaikan harga belanja bahan baku harian.',adj:{b26:7000000}},
+         {id:'sepi_pelanggan',ico:'📉',nm:'Sepi pelanggan',desc:'Lokasi kurang strategis atau persaingan ketat',dampak:'Penjualan harian menurun',rekomendasi:'Tanyakan omzet rata-rata per hari/bulan.',adj:{a27:-14400000}},
+         {id:'normal',ico:'✅',nm:'Kondisi normal',desc:'Pelanggan dan penjualan stabil',dampak:'Data baseline',rekomendasi:'Tidak ada penyesuaian.',adj:{}}
+       ]},
+      {id:'kedai_kopi',nm:'Kedai kopi/kafe rumahan',kbli:'56303',kbliNm:'Kedai minuman',kbliSub:'Kelompok 5630 — Penyediaan minuman',
+       q26:{a:4800000,b:18000000,c:1500000,d:3000000,e:200000},
+       q27:{a:33000000,b:0},
+       lbl26b:'Biji kopi, susu, gula, sirup, kemasan cup/gelas',
+       lbl27a:'Penjualan kopi dan minuman kekinian',
+       panen:0,panenLbl:'Operasional harian sepanjang tahun',
+       masalah:[
+         {id:'sewa_naik',ico:'🏠',nm:'Biaya sewa tempat naik',desc:'Pemilik tempat menaikkan harga sewa',dampak:'Biaya sewa/penyusutan Q26.c naik',rekomendasi:'Tanyakan nilai sewa aktual per tahun.',adj:{c26:3000000}},
+         {id:'normal',ico:'✅',nm:'Kondisi normal',desc:'Penjualan stabil',dampak:'Data baseline',rekomendasi:'Tidak ada penyesuaian.',adj:{}}
+       ]}
+    ]
   }
 };
 
-let sektor='pertanian', usahaId='padi_inbrida', masalahId='normal';
+let sektor='pertanian', usahaId='padi_inbrida', masalahId='normal', selectedSize=null;
 
 function getUsaha(){return DATA[sektor].usaha.find(u=>u.id===usahaId)||DATA[sektor].usaha[0];}
 function getMasalah(){const u=getUsaha();return u.masalah.find(m=>m.id===masalahId)||u.masalah[0];}
@@ -348,13 +518,22 @@ function pilihSektor(el){
   sektor=el.dataset.sektor;
   usahaId=DATA[sektor].usaha[0].id;
   masalahId='normal';
+  selectedSize=DATA[sektor].usaha[0].baseSize||null;
   renderUsaha();renderKBLI();renderMasalah();renderKeuangan();
 }
 
 function pilihUsaha(id){
   usahaId=id;masalahId='normal';
+  const u=getUsaha();
+  selectedSize=u.baseSize||null;
   document.querySelectorAll('.usaha-btn').forEach(b=>b.classList.toggle('aktif',b.dataset.uid===id));
   renderKBLI();renderMasalah();renderKeuangan();
+}
+
+function pilihUkuran(val){
+  selectedSize=val;
+  document.querySelectorAll('.preset-btn').forEach(b=>b.classList.toggle('aktif',Number(b.dataset.val)===val));
+  renderKeuangan();
 }
 
 function pilihMasalah(id){
@@ -374,6 +553,27 @@ function renderKBLI(){
   document.getElementById('unitLabel').textContent=u.unit||'—';
   document.getElementById('unitInfo').textContent=u.unitInfo||'—';
   document.getElementById('unitBox').textContent=u.unitBox||'—';
+  renderPreset();
+}
+
+const AREA_PRESETS=[1000,2500,5000,8000,10000];
+
+function renderPreset(){
+  const u=getUsaha();
+  const wrap=document.getElementById('presetWrap');
+  if(u.unitType==='luas'){
+    if(!selectedSize)selectedSize=u.baseSize;
+    wrap.innerHTML='<div class="preset-lbl">📐 Klik untuk isi otomatis luas (m²):</div><div class="preset-grid">'+
+      AREA_PRESETS.map(v=>`<button class="preset-btn${v===selectedSize?' aktif':''}" data-val="${v}" onclick="pilihUkuran(${v})">${v.toLocaleString('id-ID')} m²</button>`).join('')+'</div>';
+  } else if(u.unitType==='ternak'){
+    if(!selectedSize)selectedSize=u.baseSize;
+    const presets=u.presets||[u.baseSize];
+    wrap.innerHTML='<div class="preset-lbl">🐄 Klik untuk isi otomatis jumlah (ekor):</div><div class="preset-grid">'+
+      presets.map(v=>`<button class="preset-btn${v===selectedSize?' aktif':''}" data-val="${v}" onclick="pilihUkuran(${v})">${v.toLocaleString('id-ID')} ekor</button>`).join('')+'</div>';
+  } else {
+    selectedSize=null;
+    wrap.innerHTML='';
+  }
 }
 
 function renderMasalah(){
@@ -393,14 +593,15 @@ function renderKeuangan(){
   const u=getUsaha();
   const m=getMasalah();
   const adj=m.adj||{};
-  const a26=u.q26.a+(adj.a26||0);
-  const b26=u.q26.b+(adj.b26||0);
-  const c26=u.q26.c+(adj.c26||0);
-  const d26=u.q26.d+(adj.d26||0);
-  const e26=u.q26.e+(adj.e26||0);
+  const scale=(u.unitType&&u.baseSize&&selectedSize)?(selectedSize/u.baseSize):1;
+  const a26=(u.q26.a+(adj.a26||0))*scale;
+  const b26=(u.q26.b+(adj.b26||0))*scale;
+  const c26=(u.q26.c+(adj.c26||0))*scale;
+  const d26=(u.q26.d+(adj.d26||0))*scale;
+  const e26=(u.q26.e+(adj.e26||0))*scale;
   const f26=a26+b26+c26+d26+e26;
-  const a27=u.q27.a+(adj.a27||0);
-  const b27=u.q27.b+(adj.b27||0);
+  const a27=(u.q27.a+(adj.a27||0))*scale;
+  const b27=(u.q27.b+(adj.b27||0))*scale;
   const c27=a27+b27;
   const selisih=c27-f26;
 
@@ -416,7 +617,7 @@ function renderKeuangan(){
   document.getElementById('p27b').textContent=fmt(b27);
   document.getElementById('p27c').textContent=fmt(c27);
   document.getElementById('rPend').textContent=fmt(c27);
-  document.getElementById('rPendNote').textContent='Nilai produksi/penjualan '+u.nm+' tahun 2025';
+  document.getElementById('rPendNote').textContent='Nilai produksi/penjualan '+u.nm+' tahun 2025'+(scale!==1?' (skala '+(scale<1?(scale*100).toFixed(0)+'%':scale.toFixed(2)+'x')+' dari baseline)':'');
   document.getElementById('rPeng').textContent=fmt(f26);
   document.getElementById('rSelisih').textContent=fmt(selisih);
 
@@ -457,11 +658,15 @@ function renderKeuangan(){
 
 function resetAll(){
   sektor='pertanian';usahaId='padi_inbrida';masalahId='normal';
+  selectedSize=DATA[sektor].usaha[0].baseSize||null;
   document.querySelectorAll('.sector-btn').forEach(b=>b.classList.toggle('aktif',b.dataset.sektor==='pertanian'));
   renderUsaha();renderKBLI();renderMasalah();renderKeuangan();
 }
 
-window.addEventListener('load',()=>{renderUsaha();renderKBLI();renderMasalah();renderKeuangan();});
+window.addEventListener('load',()=>{
+  selectedSize=getUsaha().baseSize||null;
+  renderUsaha();renderKBLI();renderMasalah();renderKeuangan();
+});
 </script>
 </body>
 </html>
